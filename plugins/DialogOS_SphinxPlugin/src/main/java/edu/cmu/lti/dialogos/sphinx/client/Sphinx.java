@@ -19,6 +19,8 @@ import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
  * handle multiple languages (configurable for more than DE/EN?),
  *
  */
+
+// TODO Change for Plugin-Architecture
 public class Sphinx extends SphinxBaseRecognizer {
     private Map<Language, SphinxLanguageSettings> languageSettings;
     private SphinxContext context;

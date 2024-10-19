@@ -247,6 +247,7 @@ public class MaryTTS
   * it will lock the resources, ie: further audioplayers won't be
   * able to reproduce audio until the first one is finished.
   * */
+  // TODO: change audio output method here for the Plugin-Architecture
   private void speakMaryXML(Document xml, boolean waitUntilDone){
     try {
       audioPlayer = new AudioPlayer();

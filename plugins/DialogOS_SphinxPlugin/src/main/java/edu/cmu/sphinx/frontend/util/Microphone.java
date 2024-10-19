@@ -21,7 +21,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
-
+// TODO maybe change this for the plugin-architecture
 /**
  * <p> A Microphone captures audio data from the system's underlying audio input systems. Converts these audio data
  * into Data objects. When the method <code>startRecording()</code> is called, a new thread will be created and used to
