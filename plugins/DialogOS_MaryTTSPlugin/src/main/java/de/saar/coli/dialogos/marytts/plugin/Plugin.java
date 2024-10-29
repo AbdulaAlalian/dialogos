@@ -79,6 +79,16 @@ public class Plugin implements com.clt.dialogos.plugin.Plugin {
   }
 
   @Override
+  public boolean isAudioInputPlugin() {
+    return false;
+  }
+
+  @Override
+  public boolean isAudioOutputPlugin() {
+    return false;
+  }
+
+  @Override
   public PluginSettings createDefaultSettings() {
     return new Settings();
   }

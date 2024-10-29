@@ -68,4 +68,14 @@ public class Plugin implements com.clt.dialogos.plugin.Plugin {
     public static Sphinx getRecognizer() {
         return SphinxHolder.SPHINX;
     }
+
+    @Override
+    public boolean isAudioInputPlugin() {
+        return false;
+    }
+
+    @Override
+    public boolean isAudioOutputPlugin() {
+        return false;
+    }
 }
