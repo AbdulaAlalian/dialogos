@@ -248,8 +248,6 @@ public class Main implements MenuCommander, MenuOwner, Commands {
                 if (d != null) {
                     GUI.setDefaultCursor(d);
                 }
-            } catch (ThreadDeath death) {
-                throw death;
             } catch (Throwable exn) {
                 if (d != null) {
                     GUI.setDefaultCursor(d);
@@ -512,13 +510,7 @@ public class Main implements MenuCommander, MenuOwner, Commands {
                     }
                     break;
             }
-        } catch (ThreadDeath d) {
-            throw d;
         } catch (Throwable t) {
-            System.gc();
-            System.runFinalization();
-            System.gc();
-            System.runFinalization();
             t.printStackTrace();
             OptionPane.error(this.currentDocument, new String[]{
                 Resources.getString("CouldNotComplete"), t.toString()});
