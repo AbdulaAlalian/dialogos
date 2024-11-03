@@ -9,9 +9,10 @@
  * WARRANTIES.
  *
  */
-package edu.cmu.sphinx.frontend.util;
+package com.github.dialogos.plugin.input.util;
 
 import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.util.*;
 import edu.cmu.sphinx.util.props.*;
 
 import javax.sound.sampled.*;
@@ -603,7 +604,7 @@ public class Microphone extends BaseDataProcessor {
          *
          * @param utterance
          * @return an Data object containing the audio data
-         * @throws java.io.IOException
+         * @throws IOException
          */
         private Data readData(Utterance utterance) throws IOException {
 

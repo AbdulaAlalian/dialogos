@@ -50,10 +50,6 @@ public interface Plugin {
      */
     String getVersion();
 
-
-    boolean isAudioInputPlugin();
-    boolean isAudioOutputPlugin();
-
     /**
      * This method is called when a plugin is loaded. This usually happens when
      * DialogOS is started, i.e. on the startup screen.<p>
