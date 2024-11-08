@@ -2,7 +2,7 @@ package com.clt.dialogos.plugin;
 
 import java.util.Collection;
 
-public class PluginCommunicator {
+public class PluginManager {
     private static Collection<Plugin> plugins = PluginLoader.getPlugins();
 
 

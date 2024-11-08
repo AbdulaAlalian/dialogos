@@ -8,7 +8,7 @@ import javax.swing.*;
 
 /* TODO
     -Logik hinzufügen, um Mikrofonklasse zum Aufnehmen von Audio zu bringen
-    -Verbindung zum PluginCommunicator hinzufügen
+    -Verbindung zum PluginManager hinzufügen
  */
 
 public class LocalAudioInputPlugin implements AudioPlugin {
@@ -52,7 +52,7 @@ public class LocalAudioInputPlugin implements AudioPlugin {
 
     @Override
     public PluginSettings createDefaultSettings() {
-        return null;
+        return new Settings();
     }
 
     @Override

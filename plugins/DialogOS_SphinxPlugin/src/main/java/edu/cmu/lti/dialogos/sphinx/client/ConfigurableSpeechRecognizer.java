@@ -35,6 +35,7 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
         if (audioSource != null) {
             sds.setInputStream(audioSource);
         } else {
+            // TODO die stelle mit dem LocalAudioInputPlugin verändern
             microphone = context.getInstance(Microphone.class);
             microphone.initialize();
             sds.setPredecessor(microphone);
