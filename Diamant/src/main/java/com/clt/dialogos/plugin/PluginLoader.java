@@ -25,6 +25,21 @@ public class PluginLoader {
 
     /**
      *
+     * @return a collection of AudioPlugins
+     */
+    public static Collection<AudioPlugin> getAudioPlugins() {
+        Collection<AudioPlugin> audioPlugins = new ArrayList<>();
+        for (Plugin plugin : PluginLoader.getPlugins()) {
+            if (plugin instanceof AudioPlugin) {
+                audioPlugins.add((AudioPlugin) plugin);
+            }
+        }
+
+        return audioPlugins;
+    }
+
+    /**
+     *
      * @return the number of available plugins
      */
     public static int getNumberOfPlugins() {
