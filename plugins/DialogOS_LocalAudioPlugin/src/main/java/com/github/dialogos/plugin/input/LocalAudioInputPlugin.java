@@ -7,7 +7,6 @@ import com.github.dialogos.plugin.input.util.Microphone;
 import javax.swing.*;
 
 /* TODO
-    -Logik hinzufügen, um Mikrofonklasse zum Aufnehmen von Audio zu bringen
     -Verbindung zum PluginManager hinzufügen
  */
 
@@ -58,5 +57,19 @@ public class LocalAudioInputPlugin implements AudioPlugin {
     @Override
     public void startRecording() {
         microphone.startRecording();
+    }
+
+    @Override
+    public void stopRecording() {
+        microphone.stopRecording();
+    }
+
+    @Override
+    public boolean isRecording() {
+        return microphone.isRecording();
+    }
+
+    public Microphone getMicrophone() {
+        return microphone;
     }
 }

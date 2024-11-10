@@ -7,4 +7,8 @@ public interface AudioPlugin extends Plugin {
 
     // TODO: sicherlich keine void methode daher ändern
     void startRecording();
+
+    void stopRecording();
+
+    boolean isRecording();
 }

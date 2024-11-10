@@ -198,7 +198,21 @@ public class Microphone extends BaseDataProcessor {
     }
 
     public Microphone() {
+        this.sampleRate = MicrophoneDefaultConfig.SAMPLE_RATE;
+        this.bigEndian = MicrophoneDefaultConfig.BIG_ENDIAN;
+        this.signed = MicrophoneDefaultConfig.SIGNED;
 
+        this.desiredFormat = new AudioFormat
+                (sampleRate, MicrophoneDefaultConfig.BITS_PER_SAMPLE, MicrophoneDefaultConfig.CHANNELS,
+                        signed, bigEndian);
+
+        this.closeBetweenUtterances = MicrophoneDefaultConfig.CLOSE_BETWEEN_UTTERANCES;
+        this.msecPerRead = MicrophoneDefaultConfig.MSEC_PER_READ;
+        this.keepDataReference = MicrophoneDefaultConfig.KEEP_LAST_AUDIO;
+        this.stereoToMono = MicrophoneDefaultConfig.STEREO_TO_MONO;
+        this.selectedChannel = MicrophoneDefaultConfig.SELECT_CHANNEL;
+        this.selectedMixerIndex = MicrophoneDefaultConfig.SELECT_MIXER;
+        this.audioBufferSize = MicrophoneDefaultConfig.BUFFER_SIZE;
     }
 
     /*
