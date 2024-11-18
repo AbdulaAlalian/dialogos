@@ -1,5 +1,7 @@
 package edu.cmu.lti.dialogos.sphinx.client;
 
+import com.clt.dialogos.plugin.AudioPlugin;
+import com.clt.dialogos.plugin.PluginManager;
 import edu.cmu.sphinx.api.AbstractSpeechRecognizer;
 import edu.cmu.sphinx.api.Context;
 import edu.cmu.sphinx.api.SpeechResult;
@@ -19,6 +21,7 @@ import java.io.InputStream;
 public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
 
     private Microphone microphone;
+    AudioPlugin audioInputPlugin;
 
     public ConfigurableSpeechRecognizer(Context context, InputStream audioSource) throws IOException {
         super(context);
@@ -31,11 +34,17 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
             @Override public void newProperties(PropertySheet ps) throws PropertyException { }
         });*/
 
+        try {
+            audioInputPlugin = PluginManager.getActiveAudioInputPlugin();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         StreamDataSource sds = context.getInstance(StreamDataSource.class);
         if (audioSource != null) {
             sds.setInputStream(audioSource);
         } else {
             // TODO die stelle mit dem LocalAudioInputPlugin verändern
+            // sds.setInputStream(audioInputPlugin.getAudioInput());
             microphone = context.getInstance(Microphone.class);
             microphone.initialize();
             sds.setPredecessor(microphone);
@@ -45,13 +54,13 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
     public synchronized void startRecognition() {
         if (recognizer.getState() == Recognizer.State.DEALLOCATED)
             recognizer.allocate();
-        if (microphone != null) 
-            microphone.startRecording();
+        if (audioInputPlugin != null)
+            audioInputPlugin.startRecording();
     }
 
     public synchronized void stopRecognition() {
-        if (microphone != null && microphone.isRecording())
-            microphone.stopRecording();
+        if (audioInputPlugin != null)
+            audioInputPlugin.stopRecording();
     }
 
     public synchronized void resetRecognition() {
