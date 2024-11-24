@@ -196,7 +196,7 @@ public class DefaultToolbox
 
     private AbstractButton addToggleButton(final BooleanProperty p, String icon) {
 
-        AbstractButton b = this.addButtonGroup(new Tool[]{new Tool(p.getName(), 0, icon) {
+        AbstractButton b = this.addButtonGroup(new Tool[]{new Tool(p.getID(), 0, icon) {
 
             @Override
             public String getName() {
@@ -229,7 +229,6 @@ public class DefaultToolbox
 
             public void stateChanged(ChangeEvent evt) {
                 for (int i = 0; i < buttons.length; i++) {
-                    buttons[i].setSelected(true);
                     if (Preferences.getPrefs().getShowToolboxText()) {
                         buttons[i].setText(Resources.getString(tools[i].getName()));
                     }
@@ -314,12 +313,10 @@ public class DefaultToolbox
             // a border on the button in Mac OS X.
             Buttons.showOnlyIcon(button);
             button.setFocusPainted(false);
-            button.setBorderPainted(false);
 
             if (tool.getIcon() != null) {
                 int width = tool.getIcon().getIconWidth();
                 maxIconWidth = Math.max(maxIconWidth, width);
-
                 maxTextWidth = Math.max(maxTextWidth, button.getPreferredSize().width + 1);
             }
 
