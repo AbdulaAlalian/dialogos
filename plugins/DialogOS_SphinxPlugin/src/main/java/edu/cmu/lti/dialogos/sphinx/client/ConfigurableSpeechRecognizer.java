@@ -5,7 +5,6 @@ import com.clt.dialogos.plugin.PluginManager;
 import edu.cmu.sphinx.api.AbstractSpeechRecognizer;
 import edu.cmu.sphinx.api.Context;
 import edu.cmu.sphinx.api.SpeechResult;
-import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
@@ -20,7 +19,6 @@ import java.io.InputStream;
  */
 public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
 
-    private Microphone microphone;
     AudioPlugin audioInputPlugin;
 
     public ConfigurableSpeechRecognizer(Context context, InputStream audioSource) throws IOException {
@@ -43,11 +41,7 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
         if (audioSource != null) {
             sds.setInputStream(audioSource);
         } else {
-            // TODO die stelle mit dem LocalAudioInputPlugin verändern
-            // sds.setInputStream(audioInputPlugin.getAudioInput());
-            microphone = context.getInstance(Microphone.class);
-            microphone.initialize();
-            sds.setPredecessor(microphone);
+            sds.setInputStream(audioInputPlugin.setupAndGetAudioInput());
         }
     }
 
@@ -59,7 +53,7 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
     }
 
     public synchronized void stopRecognition() {
-        if (audioInputPlugin != null)
+        if (audioInputPlugin != null && audioInputPlugin.isRecording())
             audioInputPlugin.stopRecording();
     }
 

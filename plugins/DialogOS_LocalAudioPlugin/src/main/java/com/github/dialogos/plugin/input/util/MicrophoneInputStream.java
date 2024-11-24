@@ -1,131 +1,17 @@
-/*
- * Copyright 1999-2004 Carnegie Mellon University.  
- * Portions Copyright 2004 Sun Microsystems, Inc.  
- * Portions Copyright 2004 Mitsubishi Electric Research Laboratories.
- * All Rights Reserved.  Use is subject to license terms.
- * 
- * See the file "license.terms" for information on usage and
- * redistribution of this file, and for a DISCLAIMER OF ALL 
- * WARRANTIES.
- *
- */
 package com.github.dialogos.plugin.input.util;
 
 import edu.cmu.sphinx.frontend.*;
-import edu.cmu.sphinx.frontend.util.*;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.frontend.util.DataUtil;
+import edu.cmu.sphinx.frontend.util.Utterance;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
 
-
-/**
- * <p> A Microphone captures audio data from the system's underlying audio input systems. Converts these audio data
- * into Data objects. When the method <code>startRecording()</code> is called, a new thread will be created and used to
- * capture audio, and will stop when <code>stopRecording()</code> is called. Calling <code>getData()</code> returns the
- * captured audio data as Data objects. </p> <p> This Microphone will attempt to obtain an audio device with the format
- * specified in the configuration. If such a device with that format cannot be obtained, it will try to obtain a device
- * with an audio format that has a higher sample rate than the configured sample rate, while the other parameters of the
- * format (i.e., sample size, endianness, sign, and channel) remain the same. If, again, no such device can be obtained,
- * it flags an error, and a call <code>startRecording</code> returns false. </p>
- */
-public class Microphone extends BaseDataProcessor {
-
-    /**
-     * The property for the sample rate of the data.
-     */
-    @S4Integer(defaultValue = 16000)
-    public static final String PROP_SAMPLE_RATE = "sampleRate";
-
-    /**
-     * The property that specifies whether or not the microphone will release the audio between utterances.  On
-     * certain systems (Linux for one), closing and reopening the audio does not work too well. The default is false for
-     * Linux systems, true for others.
-     */
-    @S4Boolean(defaultValue = true)
-    public final static String PROP_CLOSE_BETWEEN_UTTERANCES = "closeBetweenUtterances";
-
-    /**
-     * The property that specifies the number of milliseconds of audio data to read each time from the underlying
-     * Java Sound audio device.
-     */
-    @S4Integer(defaultValue = 10)
-    public final static String PROP_MSEC_PER_READ = "msecPerRead";
-
-    /**
-     * The property for the number of bits per value.
-     */
-    @S4Integer(defaultValue = 16)
-    public static final String PROP_BITS_PER_SAMPLE = "bitsPerSample";
-
-    /**
-     * The property specifying the number of channels.
-     */
-    @S4Integer(defaultValue = 1)
-    public static final String PROP_CHANNELS = "channels";
-
-    /**
-     * The property specify the endianness of the data.
-     */
-    @S4Boolean(defaultValue = true)
-    public static final String PROP_BIG_ENDIAN = "bigEndian";
-
-    /**
-     * The property specify whether the data is signed.
-     */
-    @S4Boolean(defaultValue = true)
-    public static final String PROP_SIGNED = "signed";
-
-    /**
-     * The property that specifies whether to keep the audio data of an utterance around until the next utterance
-     * is recorded.
-     */
-    @S4Boolean(defaultValue = false)
-    public final static String PROP_KEEP_LAST_AUDIO = "keepLastAudio";
-
-    /**
-     * The property that specifies how to convert stereo audio to mono. Currently, the possible values are
-     * "average", which averages the samples from at each channel, or "selectChannel", which chooses audio only from
-     * that channel. If you choose "selectChannel", you should also specify which channel to use with the
-     * "selectChannel" property.
-     */
-    @S4String(defaultValue = "average", range = {"average", "selectChannel"})
-    public final static String PROP_STEREO_TO_MONO = "stereoToMono";
-
-    /**
-     * The property that specifies the channel to use if the audio is stereo
-     */
-    @S4Integer(defaultValue = 0)
-    public final static String PROP_SELECT_CHANNEL = "selectChannel";
-
-    /**
-     * The property that specifies the mixer to use.  The value can be "default," (which means let the
-     * AudioSystem decide), "last," (which means select the last Mixer supported by the AudioSystem), which appears to
-     * be what is often used for USB headsets, or an integer value which represents the index of the Mixer.Info that is
-     * returned by AudioSystem.getMixerInfo(). To get the list of Mixer.Info objects, run the AudioTool application with
-     * a command line argument of "-dumpMixers".
-     *
-     * @see edu.cmu.sphinx.tools.audio.AudioTool
-     */
-    @S4String(defaultValue = "default")
-    public final static String PROP_SELECT_MIXER = "selectMixer";
-
-    
-    /**
-     * The property that specifies the size of the buffer used to store
-     * audio samples recorded from the microphone. Default value 
-     * correspond to 200ms. Smaller value decrease microphone latency with
-     * danger of dropping out the frames if decoding thread will
-     * be slow enough to process the result.
-     */
-    @S4Integer(defaultValue = 6400)
-    public final static String PROP_BUFFER_SIZE = "bufferSize";
-
-    
+public class MicrophoneInputStream {
     private AudioFormat finalFormat;
     private AudioInputStream audioStream;
     private TargetDataLine audioLine;
@@ -134,7 +20,7 @@ public class Microphone extends BaseDataProcessor {
     private boolean doConversion;
     private volatile boolean recording;
     private volatile boolean utteranceEndReached = true;
-    private RecordingThread recorder;
+    private MicrophoneInputStream.RecordingThread recorder;
 
     // Configuration data
 
@@ -176,10 +62,9 @@ public class Microphone extends BaseDataProcessor {
      * a command line argument of "-dumpMixers".
      * @param audioBufferSize buffer size
      */
-    public Microphone(int sampleRate, int bitsPerSample, int channels,
+    public MicrophoneInputStream(int sampleRate, int bitsPerSample, int channels,
                       boolean bigEndian, boolean signed, boolean closeBetweenUtterances, int msecPerRead, boolean keepLastAudio,
                       String stereoToMono, int selectedChannel, String selectedMixerIndex, int audioBufferSize) {
-        initLogger();
 
         this.sampleRate = sampleRate;
         this.bigEndian = bigEndian;
@@ -197,14 +82,13 @@ public class Microphone extends BaseDataProcessor {
         this.audioBufferSize = audioBufferSize;
     }
 
-    public Microphone() {
+    public MicrophoneInputStream() {
         this.sampleRate = MicrophoneDefaultConfig.SAMPLE_RATE;
         this.bigEndian = MicrophoneDefaultConfig.BIG_ENDIAN;
         this.signed = MicrophoneDefaultConfig.SIGNED;
 
-        this.desiredFormat = new AudioFormat
-                (sampleRate, MicrophoneDefaultConfig.BITS_PER_SAMPLE, MicrophoneDefaultConfig.CHANNELS,
-                        signed, bigEndian);
+        this.desiredFormat = new AudioFormat(sampleRate, MicrophoneDefaultConfig.BITS_PER_SAMPLE,
+                MicrophoneDefaultConfig.CHANNELS, signed, bigEndian);
 
         this.closeBetweenUtterances = MicrophoneDefaultConfig.CLOSE_BETWEEN_UTTERANCES;
         this.msecPerRead = MicrophoneDefaultConfig.MSEC_PER_READ;
@@ -215,43 +99,10 @@ public class Microphone extends BaseDataProcessor {
         this.audioBufferSize = MicrophoneDefaultConfig.BUFFER_SIZE;
     }
 
-    /*
-    * (non-Javadoc)
-    *
-    * @see edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
-    */
-    @Override
-    public void newProperties(PropertySheet ps) throws PropertyException {
-        super.newProperties(ps);
-        logger = ps.getLogger();
-
-        sampleRate = ps.getInt(PROP_SAMPLE_RATE);
-
-        int sampleSizeInBits = ps.getInt(PROP_BITS_PER_SAMPLE);
-
-        int channels = ps.getInt(PROP_CHANNELS);
-        bigEndian = ps.getBoolean(PROP_BIG_ENDIAN);
-        signed = ps.getBoolean(PROP_SIGNED);
-
-        desiredFormat = new AudioFormat
-                (sampleRate, sampleSizeInBits, channels, signed, bigEndian);
-
-        closeBetweenUtterances = ps.getBoolean(PROP_CLOSE_BETWEEN_UTTERANCES);
-        msecPerRead = ps.getInt(PROP_MSEC_PER_READ);
-        keepDataReference = ps.getBoolean(PROP_KEEP_LAST_AUDIO);
-        stereoToMono = ps.getString(PROP_STEREO_TO_MONO);
-        selectedChannel = ps.getInt(PROP_SELECT_CHANNEL);
-        selectedMixerIndex = ps.getString(PROP_SELECT_MIXER);
-        audioBufferSize = ps.getInt(PROP_BUFFER_SIZE);
-    }
-
-
     /**
      * Constructs a Microphone with the given InputStream.
      */
-    @Override
     public void initialize() {
-        super.initialize();
         audioList = new LinkedBlockingQueue<>();
 
         DataLine.Info info
@@ -262,12 +113,12 @@ public class Microphone extends BaseDataProcessor {
          * everything we want, but has a higher sample rate.
          */
         if (!AudioSystem.isLineSupported(info)) {
-            logger.info(desiredFormat + " not supported");
+            System.out.println(desiredFormat + " not supported");
             AudioFormat nativeFormat
                     = DataUtil.getNativeAudioFormat(desiredFormat,
                     getSelectedMixer());
             if (nativeFormat == null) {
-                logger.severe("couldn't find suitable target audio format");
+                System.err.println("couldn't find suitable target audio format");
             } else {
                 finalFormat = nativeFormat;
 
@@ -276,18 +127,18 @@ public class Microphone extends BaseDataProcessor {
                         (desiredFormat, nativeFormat);
 
                 if (doConversion) {
-                    logger.info
+                    System.out.println
                             ("Converting from " + finalFormat.getSampleRate()
                                     + "Hz to " + desiredFormat.getSampleRate() + "Hz");
                 } else {
-                    logger.info
+                    System.out.println
                             ("Using native format: Cannot convert from " +
                                     finalFormat.getSampleRate() + "Hz to " +
                                     desiredFormat.getSampleRate() + "Hz");
                 }
             }
         } else {
-            logger.info("Desired format: " + desiredFormat + " supported.");
+            System.out.println("Desired format: " + desiredFormat + " supported.");
             finalFormat = desiredFormat;
         }
     }
@@ -296,7 +147,7 @@ public class Microphone extends BaseDataProcessor {
     /**
      * Gets the Mixer to use.  Depends upon selectedMixerIndex being defined.
      *
-     * @see #newProperties
+     *
      */
     private Mixer getSelectedMixer() {
         if (selectedMixerIndex.equals("default")) {
@@ -313,16 +164,13 @@ public class Microphone extends BaseDataProcessor {
     }
 
 
-    /**
-     * Creates the audioLine if necessary and returns it.
-     */
     private TargetDataLine getAudioLine() {
         if (audioLine != null) {
             return audioLine;
         }
 
         /* Obtain and open the line and stream.
-        */
+         */
         try {
             /* The finalFormat was decided in the initialize() method
              * and is based upon the capabilities of the underlying
@@ -332,7 +180,7 @@ public class Microphone extends BaseDataProcessor {
              * that we'll let the processors in the front end (e.g.,
              * the FFT) handle some form of downsampling for us.
              */
-            logger.info("Final format: " + finalFormat);
+            System.out.println("Final format: " + finalFormat);
 
             DataLine.Info info = new DataLine.Info(TargetDataLine.class,
                     finalFormat);
@@ -353,11 +201,11 @@ public class Microphone extends BaseDataProcessor {
              */
             audioLine.addLineListener(new LineListener() {
                 public void update(LineEvent event) {
-                    logger.info("line listener " + event);
+                    System.out.println("line listener " + event);
                 }
             });
         } catch (LineUnavailableException e) {
-            logger.severe("microphone unavailable " + e.getMessage());
+            System.out.println("microphone unavailable " + e.getMessage());
         }
 
         return audioLine;
@@ -374,11 +222,11 @@ public class Microphone extends BaseDataProcessor {
         TargetDataLine audioLine = getAudioLine();
         if (audioLine != null) {
             if (!audioLine.isOpen()) {
-                logger.info("open");
+                System.out.println("open");
                 try {
                     audioLine.open(finalFormat, audioBufferSize);
                 } catch (LineUnavailableException e) {
-                    logger.severe("Can't open microphone " + e.getMessage());
+                    System.err.println("Can't open microphone " + e.getMessage());
                     return false;
                 }
 
@@ -397,13 +245,21 @@ public class Microphone extends BaseDataProcessor {
                                 (int) (sec * audioStream.getFormat().getSampleRate()) *
                                 desiredFormat.getChannels();
 
-                logger.info("Frame size: " + frameSizeInBytes + " bytes");
+                System.out.println("Frame size: " + frameSizeInBytes + " bytes");
             }
             return true;
         } else {
-            logger.severe("Can't find microphone");
+            System.err.println("Can't find microphone");
             return false;
         }
+    }
+
+    /**
+     * Initializes and opens the microphone, used for the first time setup
+     */
+    public void initializeAndOpen() {
+        this.initialize();
+        this.open();
     }
 
 
@@ -445,7 +301,6 @@ public class Microphone extends BaseDataProcessor {
      * @return true if the recording started successfully; false otherwise
      */
 
-    // TODO: Stelle wo Audio eingelesen wird auslagern in das LocalInputPlugin
     public synchronized boolean startRecording() {
         if (recording) {
             return false;
@@ -455,11 +310,11 @@ public class Microphone extends BaseDataProcessor {
         }
         utteranceEndReached = false;
         if (audioLine.isRunning()) {
-            logger.severe("Whoops: audio line is running");
+            System.out.println("Whoops: audio line is running");
         }
         assert (recorder == null);
         audioList.clear();
-        recorder = new RecordingThread("Microphone");
+        recorder = new MicrophoneInputStream.RecordingThread("Microphone");
         recorder.start();
         recording = true;
         return true;
@@ -478,7 +333,6 @@ public class Microphone extends BaseDataProcessor {
             recording = false;
         }
     }
-
 
     /**
      * This Thread records audio, and caches them in an audio buffer.
@@ -528,7 +382,7 @@ public class Microphone extends BaseDataProcessor {
                 e.printStackTrace();
             }
 
-            // flush can not be called here because the audio-line might has been set to  null already by the mic-thread 
+            // flush can not be called here because the audio-line might has been set to  null already by the mic-thread
 //    	    audioLine.flush();
         }
 
@@ -539,7 +393,7 @@ public class Microphone extends BaseDataProcessor {
         @Override
         public void run() {
             totalSamplesRead = 0;
-            logger.info("started recording");
+            System.out.println("started recording");
 
             if (keepDataReference) {
                 currentUtterance = new Utterance
@@ -547,7 +401,7 @@ public class Microphone extends BaseDataProcessor {
             }
 
             audioList.add(new DataStartSignal(sampleRate));
-            logger.info("DataStartSignal added");
+            System.out.println("DataStartSignal added");
             try {
                 audioLine.start();
                 while (!done) {
@@ -576,7 +430,7 @@ public class Microphone extends BaseDataProcessor {
                     audioLine = null;
                 }
             } catch (IOException ioe) {
-                logger.warning("IO Exception " + ioe.getMessage());
+                System.out.println("IO Exception " + ioe.getMessage());
                 ioe.printStackTrace();
             }
             long duration = (long)
@@ -584,8 +438,8 @@ public class Microphone extends BaseDataProcessor {
                             (double) audioStream.getFormat().getSampleRate()) * 1000.0);
 
             audioList.add(new DataEndSignal(duration));
-            logger.info("DataEndSignal ended");
-            logger.info("stopped recording");
+            System.out.println("DataEndSignal ended");
+            System.out.println("stopped recording");
 
             synchronized (lock) {
                 lock.notify();
@@ -608,7 +462,7 @@ public class Microphone extends BaseDataProcessor {
                     wait();
                 }
             } catch (InterruptedException ie) {
-                logger.warning("wait was interrupted");
+                System.out.println("wait was interrupted");
             }
         }
 
@@ -618,7 +472,7 @@ public class Microphone extends BaseDataProcessor {
          *
          * @param utterance
          * @return an Data object containing the audio data
-         * @throws IOException
+         * @throws java.io.IOException
          */
         private Data readData(Utterance utterance) throws IOException {
 
@@ -638,10 +492,6 @@ public class Microphone extends BaseDataProcessor {
                 }
             }
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.info("Read " + numBytesRead
-                        + " bytes from audio stream.");
-            }
             if (numBytesRead <= 0) {
                 return null;
             }
@@ -712,6 +562,10 @@ public class Microphone extends BaseDataProcessor {
         return finalSamples;
     }
 
+    public InputStream getAudioInputStream() {
+        return audioStream;
+    }
+
 
     /**
      * Clears all cached audio data.
@@ -720,42 +574,4 @@ public class Microphone extends BaseDataProcessor {
         audioList.clear();
     }
 
-
-    /**
-     * Reads and returns the next Data object from this Microphone, return null if there is no more audio data. All
-     * audio data captured in-between <code>startRecording()</code> and <code>stopRecording()</code> is cached in an
-     * Utterance object. Calling this method basically returns the next chunk of audio data cached in this Utterance.
-     *
-     * @return the next Data or <code>null</code> if none is available
-     * @throws DataProcessingException if there is a data processing error
-     */
-    @Override
-    public Data getData() throws DataProcessingException {
-
-        Data output = null;
-
-        if (!utteranceEndReached) {
-            try {
-                output = audioList.take();
-            } catch (InterruptedException ie) {
-                throw new DataProcessingException("cannot take Data from audioList", ie);
-            }
-            if (output instanceof DataEndSignal) {
-                utteranceEndReached = true;
-            }
-        }
-        return output;
-    }
-
-
-    /**
-     * Returns true if there is more data in the Microphone.
-     * This happens either if the a DataEndSignal data was not taken from the buffer,
-     * or if the buffer in the Microphone is not yet empty.
-     *
-     * @return true if there is more data in the Microphone
-     */
-    public boolean hasMoreData() {
-        return !(utteranceEndReached && audioList.isEmpty());
-    }
 }

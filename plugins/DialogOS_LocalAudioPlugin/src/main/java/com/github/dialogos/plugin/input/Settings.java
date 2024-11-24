@@ -20,21 +20,11 @@ public class Settings extends PluginSettings {
         // TODO settings to read
     }
 
-    // TODO add a real menu not just an empty one
+    // TODO remove menu
     @Override
     public JComponent createEditor() {
         JPanel p = new JPanel(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(2, 3, 2, 3);
-
-        // make editor components stick to top of window
-        JPanel superpanel = new JPanel(new BorderLayout());
-        superpanel.add(p, BorderLayout.NORTH);
-
-        return superpanel;
+        return p;
     }
 
     @Override

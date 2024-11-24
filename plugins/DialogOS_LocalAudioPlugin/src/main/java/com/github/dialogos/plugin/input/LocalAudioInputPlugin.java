@@ -2,20 +2,18 @@ package com.github.dialogos.plugin.input;
 
 import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.dialogos.plugin.PluginSettings;
-import com.github.dialogos.plugin.input.util.Microphone;
+import com.github.dialogos.plugin.input.util.MicrophoneInputStream;
 
 import javax.swing.*;
-
-/* TODO
-    -Verbindung zum PluginManager hinzufügen
- */
+import java.io.IOException;
+import java.io.InputStream;
 
 public class LocalAudioInputPlugin implements AudioPlugin {
-    private Microphone microphone;
+    private MicrophoneInputStream microphone;
 
     @Override
     public void initialize() {
-        microphone = new Microphone();
+        microphone = new MicrophoneInputStream();
     }
 
     @Override
@@ -69,7 +67,9 @@ public class LocalAudioInputPlugin implements AudioPlugin {
         return microphone.isRecording();
     }
 
-    public Microphone getMicrophone() {
-        return microphone;
+    @Override
+    public InputStream setupAndGetAudioInput() throws IOException {
+        microphone.initializeAndOpen();
+        return microphone.getAudioInputStream();
     }
 }
