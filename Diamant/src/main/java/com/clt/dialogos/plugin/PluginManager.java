@@ -26,6 +26,28 @@ public class PluginManager {
         }
     }
 
+    // TODO anpassen fürs audiooutputplugin
+    public static AudioPlugin getActiveAudioOutputPlugin() throws Exception{
+        if (audioInputPluginsProp.getValue() != null) {
+            return audioInputPluginsProp.getValue();
+        } else {
+            throw new Exception("Audiooutput Plugin not set!");
+        }
+    }
+
+    public static void setActiveAudioInputPlugin(AudioPlugin plugin) {
+        if (plugin.isAudioInputPlugin()) {
+            audioInputPluginsProp.setValue(plugin);
+        }
+    }
+
+    public static void setActiveAudioOutputPlugin(AudioPlugin plugin) {
+        if (plugin.isAudioOutputPlugin()) {
+            audioOutputPluginsProp.setValue(plugin);
+        }
+
+    }
+
     public static JComponent createEditor() {
         JPanel p = new JPanel(new GridBagLayout());
 

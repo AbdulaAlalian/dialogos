@@ -15,7 +15,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import com.clt.dialogos.plugin.PluginLoader;
+import com.clt.dialogos.plugin.*;
 import com.clt.script.DefaultEnvironment;
 import com.clt.script.exp.*;
 import org.xml.sax.Attributes;
@@ -24,8 +24,6 @@ import org.xml.sax.SAXException;
 import com.clt.dialog.client.ConnectionChooser;
 import com.clt.dialog.client.Connector;
 import com.clt.dialog.client.ServerDevice;
-import com.clt.dialogos.plugin.Plugin;
-import com.clt.dialogos.plugin.PluginSettings;
 import com.clt.diamant.graph.Graph;
 import com.clt.diamant.graph.GraphOwner;
 import com.clt.diamant.graph.Node;
@@ -229,6 +227,25 @@ public class SingleDocument extends Document implements GraphOwner {
                 });
             } else if (name.equals("graph")) {
                 this.graph.read(this.r, null, this.uid_map);
+            } else if (name.equals("pluginManager")) {
+                // Read the saved plugin ids for audioIn and audioOut, compare them to other audio plugins
+                // and set those that match as active audio-IO plugins
+                this.r.setHandler(new AbstractHandler("pluginManager") {
+                    @Override
+                    protected void start(String name, Attributes atts) throws SAXException {
+                        String id = atts.getValue("id");
+                        for (AudioPlugin plugin: PluginLoader.getAudioPlugins()) {
+                            if (plugin.getId().equals(id)) {
+                                if (name.equals("audioIn")) {
+                                    PluginManager.setActiveAudioInputPlugin(plugin);
+                                } else if (name.equals("audioOut")) {
+                                    PluginManager.setActiveAudioOutputPlugin(plugin);
+                                }
+                            }
+                        }
+
+                    }
+                });
             } else {
                 this.r.raiseUnexpectedElementException(name);
             }
@@ -572,6 +589,20 @@ public class SingleDocument extends Document implements GraphOwner {
             }
 
             out.closeElement("device");
+        }
+
+        // PluginManager settings saves plugin id of the used plugins in audioIn and audioOut elements
+        try {
+            out.openElement("pluginManager");
+            if (PluginManager.getActiveAudioInputPlugin() != null) {
+                out.printElement("audioIn", new String[]{"id"}, new String[]{PluginManager.getActiveAudioInputPlugin().getId()});
+            }
+            if (PluginManager.getActiveAudioOutputPlugin() != null) {
+                out.printElement("audioOut", new String[]{"id"}, new String[]{PluginManager.getActiveAudioOutputPlugin().getId()});
+            }
+            out.closeElement("pluginManager");
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         for (Plugin plugin : PluginLoader.getPlugins()) {

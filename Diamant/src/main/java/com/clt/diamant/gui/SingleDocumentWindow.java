@@ -62,10 +62,8 @@ import com.clt.gui.menus.CmdMenuItem;
 import com.clt.gui.menus.MenuCommander;
 import com.clt.gui.plaf.IconTabbedPaneUI;
 import com.clt.mac.RequiredEventHandler;
-import com.clt.properties.PropertySet;
 import com.clt.util.DefaultLongAction;
 import com.clt.util.UserCanceledException;
-import com.clt.xml.XMLWriter;
 import java.util.function.ToIntFunction;
 
 public class SingleDocumentWindow<DocType extends SingleDocument>
@@ -938,6 +936,7 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
                        }
                    }, true));
         // TODO: Icon ändern
+        // TODO: abspeichern von den settings in xml
         jtp.addTab(Resources.getString("PluginManager"), rescaleToMaxSize(Images.load("Devices.png"), 48, 48),
                 PluginManager.createEditor());
 
