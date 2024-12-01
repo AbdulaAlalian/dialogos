@@ -1,1 +1,2 @@
 com.github.dialogos.plugin.input.LocalAudioInputPlugin
+com.github.dialogos.plugin.output.LocalAudioOutputPlugin

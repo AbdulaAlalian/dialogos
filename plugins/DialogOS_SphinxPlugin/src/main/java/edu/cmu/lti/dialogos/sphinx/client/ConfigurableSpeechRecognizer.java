@@ -34,9 +34,13 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
 
         try {
             audioInputPlugin = PluginManager.getActiveAudioInputPlugin();
+            if (audioInputPlugin == null) {
+                throw new Exception("AudioInputPlugin not set!");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
         StreamDataSource sds = context.getInstance(StreamDataSource.class);
         if (audioSource != null) {
             sds.setInputStream(audioSource);

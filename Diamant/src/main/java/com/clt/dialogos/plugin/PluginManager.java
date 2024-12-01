@@ -9,6 +9,11 @@ import java.util.Collection;
 
 public class PluginManager {
     private static Collection<AudioPlugin> audioPlugins = PluginLoader.getAudioPlugins();
+    /*
+     TODO So ändern, dass input & output plugins nicht static sind, weil sonst die gesetzten plugins von datei zu datei
+           gleich bleiben
+     */
+
     private static DefaultEnumProperty<AudioPlugin> audioInputPluginsProp = new DefaultEnumProperty("audioInputPlugin",
                                                     Resources.getString("AudioInputPlugin"), null,
             audioPlugins.stream().filter(AudioPlugin::isAudioInputPlugin).toArray(AudioPlugin[]::new));
@@ -18,21 +23,18 @@ public class PluginManager {
             audioPlugins.stream().filter(AudioPlugin::isAudioOutputPlugin).toArray(AudioPlugin[]::new));
 
 
-    public static AudioPlugin getActiveAudioInputPlugin() throws Exception{
+    public static AudioPlugin getActiveAudioInputPlugin(){
         if (audioInputPluginsProp.getValue() != null) {
             return audioInputPluginsProp.getValue();
-        } else {
-            throw new Exception("Audioinput Plugin not set!");
         }
+        return null;
     }
 
-    // TODO anpassen fürs audiooutputplugin
-    public static AudioPlugin getActiveAudioOutputPlugin() throws Exception{
-        if (audioInputPluginsProp.getValue() != null) {
-            return audioInputPluginsProp.getValue();
-        } else {
-            throw new Exception("Audiooutput Plugin not set!");
+    public static AudioPlugin getActiveAudioOutputPlugin(){
+        if (audioOutputPluginsProp.getValue() != null) {
+            return audioOutputPluginsProp.getValue();
         }
+        return null;
     }
 
     public static void setActiveAudioInputPlugin(AudioPlugin plugin) {
