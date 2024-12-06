@@ -1,6 +1,8 @@
 
 package de.saar.coli.dialogos.marytts;
 
+import com.clt.dialogos.plugin.AudioPlugin;
+import com.clt.dialogos.plugin.PluginManager;
 import com.clt.properties.DefaultEnumProperty;
 import com.clt.properties.Property;
 import com.clt.speech.Language;
@@ -12,7 +14,6 @@ import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.exceptions.MaryConfigurationException;
 import marytts.exceptions.SynthesisException;
-import marytts.util.data.audio.AudioPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -49,8 +50,8 @@ public class MaryTTS
 
   private MaryInterface mary;
   private DefaultEnumProperty<MaryTTSVoice> voice;
-  private AudioPlayer audioPlayer;
   private Document maryXML;
+  private AudioPlugin audioOutputPlugin;
 
   public MaryTTS() {
     try {
@@ -247,13 +248,22 @@ public class MaryTTS
   * it will lock the resources, ie: further audioplayers won't be
   * able to reproduce audio until the first one is finished.
   * */
-  // TODO audioplayer auslagern, der ist dafür verantwortlich, dass audio ausgegebn wird auf die Lautsprecher
   private void speakMaryXML(Document xml, boolean waitUntilDone){
     try {
-      audioPlayer = new AudioPlayer();
+      // Setup AudioOutputPlugin
+      // audioPlayer = new AudioPlayer();
+      try {
+        audioOutputPlugin = PluginManager.getActiveAudioOutputPlugin();
+        if (audioOutputPlugin == null) {
+          throw new Exception("AudioOutputPlugin not set!");
+        }
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+      // Create a new AudioPlayer by initializing the plugin again
+      audioOutputPlugin.initialize();
       AudioInputStream audioIS = mary.generateAudio(xml);
-      audioPlayer.setAudio(audioIS);
-      audioPlayer.start();
+      audioOutputPlugin.playAudio(audioIS);
       if (waitUntilDone){
         awaitEndOfSpeech();
       }
@@ -274,9 +284,9 @@ public class MaryTTS
   }
 
   public void awaitEndOfSpeech() {
-    if (audioPlayer != null) {
+    if (audioOutputPlugin != null) {
       try {
-        audioPlayer.join();
+        audioOutputPlugin.joinAudioOutputThread();
       } catch (InterruptedException e) {
         //Something in audioPlayer.join() went wrong.
         e.printStackTrace();
@@ -306,8 +316,8 @@ public class MaryTTS
 
   @Override
   synchronized public void stop() {
-    if (audioPlayer != null)
-      audioPlayer.cancel();
+    if (audioOutputPlugin != null)
+      audioOutputPlugin.stopAudio();
   }
 
   @Override

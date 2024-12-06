@@ -6,4 +6,7 @@ dependencies {
         exclude module: 'sphinx4-data'
         exclude module: 'sphinx4-samples'
     }
+    implementation('com.github.marytts.marytts:marytts-signalproc:master-SNAPSHOT') {
+        exclude(group:'de.dfki.mary')
+    }
 }

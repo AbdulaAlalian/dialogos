@@ -1,5 +1,6 @@
 package com.clt.dialogos.plugin;
 
+import javax.sound.sampled.AudioInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -43,4 +44,21 @@ public interface AudioPlugin extends Plugin {
     default InputStream setupAndGetAudioInput() throws IOException {
         return null;
     }
+
+    /**
+     * Plays the audio from the specified audio inputstream (e.g. synthesised audio from maryTTS) to an audio output device.
+     * This method is implemented by an Audiooutput plugin and the default implementation of playAudio does nothing.
+     */
+    default void playAudio(AudioInputStream audioInputStream) {};
+
+    /**
+     * Stops the playing of Audio to an audio output device. This Method is implemented by an audiooutput plugin and the
+     * default implementation of stopAudio does nothing.
+     */
+    default void stopAudio() {}
+
+    /**
+     * Calls the join method of the thread, responsible for playing the audio to the audio output device
+     */
+    default void joinAudioOutputThread() throws InterruptedException {}
 }
