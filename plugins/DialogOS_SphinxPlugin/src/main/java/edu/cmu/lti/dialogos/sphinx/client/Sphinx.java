@@ -1,5 +1,6 @@
 package edu.cmu.lti.dialogos.sphinx.client;
 
+import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.speech.Language;
 import com.clt.speech.SpeechException;
 import com.clt.speech.recognition.*;
@@ -25,12 +26,17 @@ public class Sphinx extends SphinxBaseRecognizer {
     ConfigurableSpeechRecognizer csr;
     private boolean vadInSpeech = false;
     private boolean stopping = false;
+    private AudioPlugin audioInputPlugin;
 
     public Sphinx() {
         languageSettings = SphinxLanguageSettings.createDefault();
         /* addRecognizerListener(evt -> {
             System.err.println("DialogOS recognizer listener defined in Sphinx.java: " + evt.toString());
         }); */
+    }
+
+    public void setAudioInputPlugin(AudioPlugin audioOutputPlugin) {
+        this.audioInputPlugin = audioOutputPlugin;
     }
 
     public SphinxLanguageSettings getLanguageSettings(Language l) {
@@ -40,6 +46,15 @@ public class Sphinx extends SphinxBaseRecognizer {
     @Override protected RecognitionResult startImpl() throws SpeechException {
         fireRecognizerEvent(RecognizerEvent.RECOGNIZER_LOADING);
         assert context != null : "cannot start recognition without a context";
+        // set AudioInputStream of Microphone here
+        try {
+            if (audioInputPlugin == null) {
+                throw new Exception("AudioInputPlugin not set!");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        context.setAudioInputPlugin(audioInputPlugin);
         csr = context.getRecognizer();
         context.getVadListener().setRecognizer(this);
         vadInSpeech = false;

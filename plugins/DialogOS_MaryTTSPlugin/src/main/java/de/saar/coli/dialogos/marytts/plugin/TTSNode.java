@@ -170,6 +170,8 @@ public class TTSNode extends AbstractOutputNode {
         //    }
         //    TTSNode.speak(settings, voicename, prompt);
         MaryTTS synthesizer = (MaryTTS) Plugin.getSynthesizer();
+        // Set audioplugin here, because the node has information about the singledocument
+        synthesizer.setAudioOutputPlugin(this.getGraph().getOwner().getPluginManager().getActiveAudioOutputPlugin());
         VoiceName voicename = (VoiceName) properties.get(VOICE);
         setVoice(settings, synthesizer, voicename);
         ((MaryTTS) synthesizer).setProsody2MaryXML(settings.getStrVolume(), settings.getPitch(), settings.getSpeed());

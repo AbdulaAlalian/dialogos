@@ -2,7 +2,6 @@
 package de.saar.coli.dialogos.marytts;
 
 import com.clt.dialogos.plugin.AudioPlugin;
-import com.clt.dialogos.plugin.PluginManager;
 import com.clt.properties.DefaultEnumProperty;
 import com.clt.properties.Property;
 import com.clt.speech.Language;
@@ -196,6 +195,10 @@ public class MaryTTS
     }
   }
 
+  public void setAudioOutputPlugin(AudioPlugin audioOutputPlugin) {
+    this.audioOutputPlugin = audioOutputPlugin;
+  }
+
   /*
   * setVoice2MaryXML: Inserts the locale into the
   * xml Document (maryXML).
@@ -253,7 +256,6 @@ public class MaryTTS
       // Setup AudioOutputPlugin
       // audioPlayer = new AudioPlayer();
       try {
-        audioOutputPlugin = PluginManager.getActiveAudioOutputPlugin();
         if (audioOutputPlugin == null) {
           throw new Exception("AudioOutputPlugin not set!");
         }

@@ -8,49 +8,51 @@ import java.awt.*;
 import java.util.Collection;
 
 public class PluginManager {
+
     private static Collection<AudioPlugin> audioPlugins = PluginLoader.getAudioPlugins();
-    /*
-     TODO So ändern, dass input & output plugins nicht static sind, weil sonst die gesetzten plugins von datei zu datei
-           gleich bleiben
-     */
 
-    private static DefaultEnumProperty<AudioPlugin> audioInputPluginsProp = new DefaultEnumProperty("audioInputPlugin",
-                                                    Resources.getString("AudioInputPlugin"), null,
-            audioPlugins.stream().filter(AudioPlugin::isAudioInputPlugin).toArray(AudioPlugin[]::new));
+    private DefaultEnumProperty<AudioPlugin> audioInputPluginsProp;
 
-    private static DefaultEnumProperty<AudioPlugin> audioOutputPluginsProp =  new DefaultEnumProperty("audioOutputPlugin",
-                                                      Resources.getString("AudioOutputPlugin"), null,
-            audioPlugins.stream().filter(AudioPlugin::isAudioOutputPlugin).toArray(AudioPlugin[]::new));
+    private DefaultEnumProperty<AudioPlugin> audioOutputPluginsProp;
 
+    public PluginManager() {
+        audioInputPluginsProp = new DefaultEnumProperty<>("audioInputPlugin",
+                Resources.getString("AudioInputPlugin"), null,
+                audioPlugins.stream().filter(AudioPlugin::isAudioInputPlugin).toArray(AudioPlugin[]::new));
+        audioOutputPluginsProp =  new DefaultEnumProperty<>("audioOutputPlugin",
+                Resources.getString("AudioOutputPlugin"), null,
+                audioPlugins.stream().filter(AudioPlugin::isAudioOutputPlugin).toArray(AudioPlugin[]::new));
 
-    public static AudioPlugin getActiveAudioInputPlugin(){
+    }
+
+    public AudioPlugin getActiveAudioInputPlugin(){
         if (audioInputPluginsProp.getValue() != null) {
             return audioInputPluginsProp.getValue();
         }
         return null;
     }
 
-    public static AudioPlugin getActiveAudioOutputPlugin(){
+    public AudioPlugin getActiveAudioOutputPlugin(){
         if (audioOutputPluginsProp.getValue() != null) {
             return audioOutputPluginsProp.getValue();
         }
         return null;
     }
 
-    public static void setActiveAudioInputPlugin(AudioPlugin plugin) {
+    public void setActiveAudioInputPlugin(AudioPlugin plugin) {
         if (plugin.isAudioInputPlugin()) {
             audioInputPluginsProp.setValue(plugin);
         }
     }
 
-    public static void setActiveAudioOutputPlugin(AudioPlugin plugin) {
+    public void setActiveAudioOutputPlugin(AudioPlugin plugin) {
         if (plugin.isAudioOutputPlugin()) {
             audioOutputPluginsProp.setValue(plugin);
         }
 
     }
 
-    public static JComponent createEditor() {
+    public JComponent createEditor() {
         JPanel p = new JPanel(new GridBagLayout());
 
 

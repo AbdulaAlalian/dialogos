@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.clt.dialogos.plugin.Plugin;
+import com.clt.dialogos.plugin.PluginManager;
 import com.clt.dialogos.plugin.PluginSettings;
 import com.clt.diamant.Device;
 import com.clt.diamant.Grammar;
@@ -32,6 +33,14 @@ public interface GraphOwner {
      * @return a PlugingSettings object corresponding to the plug-in.
      */
     public PluginSettings getPluginSettings(Class<? extends Plugin> pluginClass);
+
+    /**
+     * Returns the plug-in manager of the given graph
+     * @return
+     */
+    public default PluginManager getPluginManager() {
+        return null;
+    }
 
     /**
      * Returns the list of grammars of the graph.

@@ -1,5 +1,6 @@
 package edu.cmu.lti.dialogos.sphinx.client;
 
+import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.speech.SpeechException;
 import com.clt.speech.recognition.RecognitionContext;
 import com.clt.srgf.Grammar;
@@ -37,6 +38,7 @@ public class SphinxContext extends RecognitionContext {
 
     Configuration configuration;
     protected InputStream audioSource;
+    AudioPlugin audioInputPlugin;
     SphinxLanguageSettings sls;
     Grammar grammar;
     ConfigurableSpeechRecognizer csr;
@@ -66,6 +68,10 @@ public class SphinxContext extends RecognitionContext {
         return this.grammar;
     }
 
+    public void setAudioInputPlugin(AudioPlugin audioInputPlugin) {
+        this.audioInputPlugin = audioInputPlugin;
+    }
+
     public void setAudioSource(InputStream audioSource) {
         this.audioSource = audioSource;
     }
@@ -80,7 +86,7 @@ public class SphinxContext extends RecognitionContext {
                 jsgfGrammar = context.getInstance(JSGFGrammar.class);
                 vadListener = context.getInstance(VADListener.class);
                 dflat = context.getInstance(DynamicFlatLinguist.class);
-                csr = new ConfigurableSpeechRecognizer(context, audioSource);
+                csr = new ConfigurableSpeechRecognizer(context, audioSource, audioInputPlugin);
             }
             if (sls.revalidateG2P) {
                 csr.resetRecognition();

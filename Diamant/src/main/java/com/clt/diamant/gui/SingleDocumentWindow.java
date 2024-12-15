@@ -936,9 +936,8 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
                        }
                    }, true));
         // TODO: Icon ändern
-        // TODO: abspeichern von den settings in xml
         jtp.addTab(Resources.getString("PluginManager"), rescaleToMaxSize(Images.load("Devices.png"), 48, 48),
-                PluginManager.createEditor());
+                doc.getPluginManager().createEditor());
 
         for (Plugin plugin : PluginLoader.getPlugins()) {
             JPanel p = new JPanel(new BorderLayout(6, 6));

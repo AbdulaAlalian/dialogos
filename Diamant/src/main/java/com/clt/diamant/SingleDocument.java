@@ -237,9 +237,9 @@ public class SingleDocument extends Document implements GraphOwner {
                         for (AudioPlugin plugin: PluginLoader.getAudioPlugins()) {
                             if (plugin.getId().equals(id)) {
                                 if (name.equals("audioIn")) {
-                                    PluginManager.setActiveAudioInputPlugin(plugin);
+                                    pluginManager.setActiveAudioInputPlugin(plugin);
                                 } else if (name.equals("audioOut")) {
-                                    PluginManager.setActiveAudioOutputPlugin(plugin);
+                                    pluginManager.setActiveAudioOutputPlugin(plugin);
                                 }
                             }
                         }
@@ -270,6 +270,7 @@ public class SingleDocument extends Document implements GraphOwner {
 
     private Map<Class<? extends Plugin>, PluginSettings> pluginSettings;
     private Collection<Device> devices;
+    private PluginManager pluginManager;
 
     private Map<String, TemplateBundle> localizationBundles;
 
@@ -281,6 +282,7 @@ public class SingleDocument extends Document implements GraphOwner {
     public SingleDocument() {
         this.devices = new ArrayList<Device>();
         this.pluginSettings = new HashMap<Class<? extends Plugin>, PluginSettings>();
+        this.pluginManager = new PluginManager();
         this.localizationBundles = new HashMap<String, TemplateBundle>();
 
         environment = new DeviceAwareEnvironment(devices);
@@ -594,11 +596,11 @@ public class SingleDocument extends Document implements GraphOwner {
         // PluginManager settings saves plugin id of the used plugins in audioIn and audioOut elements
         try {
             out.openElement("pluginManager");
-            if (PluginManager.getActiveAudioInputPlugin() != null) {
-                out.printElement("audioIn", new String[]{"id"}, new String[]{PluginManager.getActiveAudioInputPlugin().getId()});
+            if (pluginManager.getActiveAudioInputPlugin() != null) {
+                out.printElement("audioIn", new String[]{"id"}, new String[]{pluginManager.getActiveAudioInputPlugin().getId()});
             }
-            if (PluginManager.getActiveAudioOutputPlugin() != null) {
-                out.printElement("audioOut", new String[]{"id"}, new String[]{PluginManager.getActiveAudioOutputPlugin().getId()});
+            if (pluginManager.getActiveAudioOutputPlugin() != null) {
+                out.printElement("audioOut", new String[]{"id"}, new String[]{pluginManager.getActiveAudioOutputPlugin().getId()});
             }
             out.closeElement("pluginManager");
         } catch (Exception ex) {
@@ -750,6 +752,11 @@ public class SingleDocument extends Document implements GraphOwner {
             public PluginSettings getPluginSettings(
                     Class<? extends Plugin> pluginClass) {
                 return SingleDocument.this.getPluginSettings(pluginClass);
+            }
+
+            @Override
+            public PluginManager getPluginManager() {
+                return SingleDocument.this.getPluginManager();
             }
 
             public Environment getEnvironment(boolean local) {
@@ -917,6 +924,10 @@ public class SingleDocument extends Document implements GraphOwner {
 
     public Collection<Device> getDevices() {
         return this.devices;
+    }
+
+    public PluginManager getPluginManager() {
+        return this.pluginManager;
     }
 
     public PluginSettings getPluginSettings(Class<? extends Plugin> pluginClass) {

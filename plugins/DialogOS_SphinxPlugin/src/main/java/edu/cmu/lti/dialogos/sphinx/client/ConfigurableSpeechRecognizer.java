@@ -1,7 +1,6 @@
 package edu.cmu.lti.dialogos.sphinx.client;
 
 import com.clt.dialogos.plugin.AudioPlugin;
-import com.clt.dialogos.plugin.PluginManager;
 import edu.cmu.sphinx.api.AbstractSpeechRecognizer;
 import edu.cmu.sphinx.api.Context;
 import edu.cmu.sphinx.api.SpeechResult;
@@ -21,7 +20,7 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
 
     AudioPlugin audioInputPlugin;
 
-    public ConfigurableSpeechRecognizer(Context context, InputStream audioSource) throws IOException {
+    public ConfigurableSpeechRecognizer(Context context, InputStream audioSource, AudioPlugin audioInputPlugin) throws IOException {
         super(context);
         recognizer.allocate();
 
@@ -32,14 +31,7 @@ public class ConfigurableSpeechRecognizer extends AbstractSpeechRecognizer {
             @Override public void newProperties(PropertySheet ps) throws PropertyException { }
         });*/
 
-        try {
-            audioInputPlugin = PluginManager.getActiveAudioInputPlugin();
-            if (audioInputPlugin == null) {
-                throw new Exception("AudioInputPlugin not set!");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.audioInputPlugin = audioInputPlugin;
 
         StreamDataSource sds = context.getInstance(StreamDataSource.class);
         if (audioSource != null) {

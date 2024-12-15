@@ -37,7 +37,11 @@ public class SphinxNode extends AbstractInputNode {
             return new SilentRecognitionExecutor();
         } else {
             recGrammar.requestRobustness(Boolean.TRUE == getProperty(ENABLE_GARBAGE));
-            return new SphinxRecognitionExecutor(getRecognizer());
+            Sphinx sphinx = getRecognizer();
+            // Set audioInputPlugin here, so that the sphinx recognizer can use it for the speech recognition
+            // also the node has information about the singledocument
+            sphinx.setAudioInputPlugin(getGraph().getOwner().getPluginManager().getActiveAudioInputPlugin());
+            return new SphinxRecognitionExecutor(sphinx);
         }
     }
 
