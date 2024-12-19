@@ -1,4 +1,4 @@
-package com.github.dialogos.plugin.output;
+package com.github.dialogos.plugin.remote.input;
 
 import com.clt.dialogos.plugin.PluginRuntime;
 import com.clt.dialogos.plugin.PluginSettings;
@@ -11,13 +11,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Settings extends PluginSettings {
-
     @Override
     public void writeAttributes(XMLWriter out, IdMap uidMap) {
+
     }
 
     @Override
     protected void readAttribute(XMLReader r, String name, String value, IdMap uid_map) throws SAXException {
+
     }
 
     @Override

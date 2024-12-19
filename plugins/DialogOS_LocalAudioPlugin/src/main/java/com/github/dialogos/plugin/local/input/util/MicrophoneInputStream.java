@@ -1,4 +1,4 @@
-package com.github.dialogos.plugin.input.util;
+package com.github.dialogos.plugin.local.input.util;
 
 import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.util.DataUtil;

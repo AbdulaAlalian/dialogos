@@ -1,8 +1,8 @@
-package com.github.dialogos.plugin.input;
+package com.github.dialogos.plugin.local.input;
 
 import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.dialogos.plugin.PluginSettings;
-import com.github.dialogos.plugin.input.util.MicrophoneInputStream;
+import com.github.dialogos.plugin.local.input.util.MicrophoneInputStream;
 
 import javax.swing.*;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.github.dialogos.plugin.output;
+package com.github.dialogos.plugin.local.output;
 
 import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.dialogos.plugin.PluginSettings;

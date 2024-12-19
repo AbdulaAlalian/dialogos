@@ -13,5 +13,6 @@ include 'com.clt.speech'
 include 'plugins:DialogOS_MaryTTSPlugin'
 include 'plugins:DialogOS_SphinxPlugin'
 include 'plugins:DialogOS_LocalAudioPlugin'
+include 'plugins:DialogOS_RemoteAudioPlugin'
 
 rootProject.name = "dialogos"

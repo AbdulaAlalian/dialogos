@@ -1,4 +1,4 @@
-package com.github.dialogos.plugin.input.util;
+package com.github.dialogos.plugin.local.input.util;
 
 /**
  * Default Configuration for the microphone class. Used in the default
