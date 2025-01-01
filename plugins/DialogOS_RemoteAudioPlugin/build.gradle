@@ -9,6 +9,11 @@ dependencies {
     implementation('com.github.marytts.marytts:marytts-signalproc:master-SNAPSHOT') {
         exclude(group:'de.dfki.mary')
     }
+
     // https://mvnrepository.com/artifact/org.jitsi/libjitsi
-    implementation("org.jitsi:libjitsi:1.1-34-gb93ce2ee")
+    implementation("org.jitsi:libjitsi:1.1-4-gfb6b03ff")
+    // https://mvnrepository.com/artifact/org.jitsi/ice4j
+    implementation("org.jitsi:ice4j:3.0-54-g2baae57")
+
+
 }
