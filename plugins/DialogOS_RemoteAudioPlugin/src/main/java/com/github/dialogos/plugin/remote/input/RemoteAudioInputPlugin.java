@@ -62,16 +62,17 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
 
     @Override
     public InputStream setupAndGetAudioInput() throws IOException {
+        rtpReceiver.startListening("127.0.0.1", 5004);
         return rtpInputStream;
     }
 
     @Override
     public void stopRecording() {
-        rtpReceiver.stopListening();
+        rtpInputStream.stopRecording();
     }
 
     @Override
     public void startRecording() {
-        rtpReceiver.startListening("127.0.0.1", 5004);
+        rtpInputStream.startRecording();
     }
 }
