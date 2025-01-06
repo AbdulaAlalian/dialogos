@@ -25,7 +25,7 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
 
     @Override
     public String getId() {
-        return "dialogos.plugin.remoteAudioPlugin";
+        return "dialogos.plugin.remoteAudioInput";
     }
 
     @Override

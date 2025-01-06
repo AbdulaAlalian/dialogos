@@ -5,11 +5,11 @@ import javax.sound.sampled.AudioFormat;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-/**
+/*
  * TODO
  *  - Finish RTP handling & receiving
  *  - add decoding for standard audio codecs if needed
- *  - add webRTC support (should not be trivial at all tbh, and requires signaling implementation)
+ *  - add webRTC support (need webclient/server architecture first)
  *
  */
 
@@ -43,7 +43,7 @@ public class RTPReceiver {
 
     private void listenForPackets(int port) {
         try (DatagramSocket socket = new DatagramSocket(port)) {
-            byte[] receiveBuffer = new byte[2048];
+            byte[] receiveBuffer = new byte[3200];
             DatagramPacket packet = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 
             System.out.println("Listening for RTP packets on port " + port);
@@ -51,13 +51,13 @@ public class RTPReceiver {
             while (isListening) {
                 socket.receive(packet);
 
-                // Decode the RTP packet
+                // Decode RTP packet
                 byte[] rtpData = packet.getData();
                 int length = packet.getLength();
                 byte[] decodedAudio = decodeRTPPacket(rtpData, length);
 
                 // Add decoded audio to RTPInputStream
-                if (decodedAudio != null && rtpInputStream.isRecording()) {
+                if (decodedAudio != null) {
                     rtpInputStream.addDataToBuffer(decodedAudio);
                 }
             }
@@ -82,7 +82,6 @@ public class RTPReceiver {
             byte[] payload = new byte[length - headerLength];
             System.arraycopy(rtpData, headerLength, payload, 0, payload.length);
 
-            // TODO add decoding of specific codecs to PCM (G.711 or OPUS) if needed
             return payload;
         } catch (Exception e) {
             throw new RuntimeException("Error decoding RTP packet: " + e.getMessage());
