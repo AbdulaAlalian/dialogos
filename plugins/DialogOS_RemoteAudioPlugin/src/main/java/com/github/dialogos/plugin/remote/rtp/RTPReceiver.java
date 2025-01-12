@@ -28,10 +28,12 @@ public class RTPReceiver {
     }
 
 
-    // Start listening for RTP streams
+    /**
+     * Starts listening for rtp streams
+     * @param port RTP port
+     */
     public void startListening(String remoteHost, int port) {
         isListening = true;
-        this.rtpInputStream.startRecording();
         new Thread(() -> listenForPackets(port)).start();
     }
 
@@ -56,10 +58,7 @@ public class RTPReceiver {
                 int length = packet.getLength();
                 byte[] decodedAudio = decodeRTPPacket(rtpData, length);
 
-                // Add decoded audio to RTPInputStream
-                if (decodedAudio != null) {
-                    rtpInputStream.addDataToBuffer(decodedAudio);
-                }
+                rtpInputStream.addAudioData(decodedAudio);
             }
         } catch (Exception e) {
             System.err.println("Error in listenForPackets: " + e.getMessage());
