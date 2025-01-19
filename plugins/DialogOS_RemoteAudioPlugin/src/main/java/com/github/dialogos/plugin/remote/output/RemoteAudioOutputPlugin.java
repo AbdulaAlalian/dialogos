@@ -2,11 +2,15 @@ package com.github.dialogos.plugin.remote.output;
 
 import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.dialogos.plugin.PluginSettings;
+import com.github.dialogos.plugin.remote.rtp.RTPStreamer;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 
+
 public class RemoteAudioOutputPlugin implements AudioPlugin {
+    RTPStreamer rtpStreamer;
+
     @Override
     public boolean isAudioInputPlugin() {
         return false;
@@ -19,17 +23,23 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
 
     @Override
     public void playAudio(AudioInputStream audioInputStream) {
-        // TODO implement playAudio method
+        try {
+            rtpStreamer.setAudio(audioInputStream);
+            rtpStreamer.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
 
     @Override
     public void stopAudio() {
-        // TODO implement stopAudio method
+        rtpStreamer.stopStreaming();
     }
 
     @Override
     public void joinAudioOutputThread() throws InterruptedException {
-        // TODO implement joinAudioOutputThread method
+        rtpStreamer.join();
     }
 
     @Override
@@ -54,7 +64,12 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
 
     @Override
     public void initialize() {
-        //TODO initialize necessary classes
+        try {
+            //rtpStreamer = new RTPStreamer("127.0.0.1", 5004);
+            rtpStreamer = new RTPStreamer("127.0.0.1", 5004);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     @Override

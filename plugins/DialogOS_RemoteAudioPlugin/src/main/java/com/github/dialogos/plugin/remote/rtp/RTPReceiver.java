@@ -7,7 +7,6 @@ import java.net.DatagramSocket;
 
 /*
  * TODO
- *  - Finish RTP handling & receiving
  *  - add decoding for standard audio codecs if needed
  *  - add webRTC support (need webclient/server architecture first)
  *
@@ -15,8 +14,6 @@ import java.net.DatagramSocket;
 
 public class RTPReceiver {
 
-    // RTP session management fields
-    private StunStack stunStack; // Or an equivalent RTP handler class
     private boolean isListening = false;
     private RTPInputStream rtpInputStream;
     private AudioFormat audioFormat;
@@ -32,7 +29,7 @@ public class RTPReceiver {
      * Starts listening for rtp streams
      * @param port RTP port
      */
-    public void startListening(String remoteHost, int port) {
+    public void startListening(int port) {
         isListening = true;
         new Thread(() -> listenForPackets(port)).start();
     }
