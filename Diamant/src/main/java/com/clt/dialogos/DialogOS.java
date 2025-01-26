@@ -14,6 +14,7 @@ import com.clt.event.ProgressListener;
 import com.clt.gui.GUI;
 import com.clt.gui.OptionPane;
 import com.clt.util.Misc;
+import com.clt.web.DialogOSWebServer;
 
 import javax.swing.*;
 import java.io.File;
@@ -60,6 +61,8 @@ public class DialogOS {
     }
 
     public static void main(String[] args) throws Exception {
+        DialogOSWebServer.startWebServer();
+
         boolean execute = false;
         boolean headless = false;
         boolean loadClients = false;

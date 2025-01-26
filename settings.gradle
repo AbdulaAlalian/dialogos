@@ -9,6 +9,7 @@ include 'com.clt.speech'
 //include 'SpeechClient'
 //include 'TTSClient'
 //include 'RecognizerClient'
+include 'com.clt.web'
 
 include 'plugins:DialogOS_MaryTTSPlugin'
 include 'plugins:DialogOS_SphinxPlugin'

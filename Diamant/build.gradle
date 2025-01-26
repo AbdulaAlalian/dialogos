@@ -13,6 +13,7 @@ dependencies {
   implementation project(':com.clt.audio')
   implementation project(':com.clt.speech')
   implementation project(':com.clt.mac')
+  implementation project(':com.clt.web')
   implementation project(':ClientInterface')
   implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.21'
   
