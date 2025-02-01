@@ -1,14 +1,16 @@
 package com.clt.web;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketListener;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.IOException;
+import java.net.*;
 
-// TODO Send to RTPReceiver and test
+/*
+   TODO
+    - disable timeout error message in console (does not affect the software)
+ */
+
 @WebSocket
 public class WebSocketToRTPBridge {
 
@@ -22,14 +24,11 @@ public class WebSocketToRTPBridge {
 
     @OnWebSocketMessage
     public void onMessage(Session session, byte[] message, int offset, int len) {
-        System.out.println("Message received from client " + len + " bytes");
         try (DatagramSocket socket = new DatagramSocket()) {
             // Send to RTP Receiver via UDP
-            InetAddress receiverAddress = InetAddress.getByName("localhost");
-            DatagramPacket packet = new DatagramPacket(message, offset, message.length, receiverAddress, RTP_PORT);
-            socket.send(packet);
+            sendToRTPReceiver(message, offset);
         } catch (Exception e) {
-            e.printStackTrace();  // Log any error that occurs
+            e.printStackTrace();
         }
     }
 
@@ -41,5 +40,16 @@ public class WebSocketToRTPBridge {
     @OnWebSocketError
     public void onError(Session session, Throwable error) {
         error.printStackTrace();
+    }
+
+    private void sendToRTPReceiver(byte[] audioData, int offset) {
+        try (DatagramSocket socket = new DatagramSocket()) {
+            InetAddress receiverAddress = InetAddress.getByName("localhost");
+            DatagramPacket packet = new DatagramPacket(audioData, offset, audioData.length, receiverAddress, RTP_PORT);
+            socket.send(packet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

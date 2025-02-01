@@ -1,14 +1,11 @@
 package com.github.dialogos.plugin.remote.rtp;
 
-import org.ice4j.stack.StunStack;
-import javax.sound.sampled.AudioFormat;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 /*
  * TODO
- *  - add decoding for standard audio codecs if needed
- *  - add webRTC support (need webclient/server architecture first)
+    - Add Conversion of Sample Rate
  *
  */
 
@@ -16,14 +13,11 @@ public class RTPReceiver {
 
     private boolean isListening = false;
     private RTPInputStream rtpInputStream;
-    private AudioFormat audioFormat;
 
     // Constructor
-    public RTPReceiver(AudioFormat format, RTPInputStream rtpInputStream) {
-        this.audioFormat = format;
+    public RTPReceiver(RTPInputStream rtpInputStream) {
         this.rtpInputStream = rtpInputStream;
     }
-
 
     /**
      * Starts listening for rtp streams

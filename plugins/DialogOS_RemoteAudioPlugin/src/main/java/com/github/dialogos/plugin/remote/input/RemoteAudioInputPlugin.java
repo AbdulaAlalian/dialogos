@@ -46,8 +46,7 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
     @Override
     public void initialize() {
         this.rtpInputStream = new RTPInputStream();
-        // TODO add AudioFormat (PCM_SIGNED)
-        this.rtpReceiver = new RTPReceiver(null, rtpInputStream);
+        this.rtpReceiver = new RTPReceiver( rtpInputStream);
     }
 
     @Override
