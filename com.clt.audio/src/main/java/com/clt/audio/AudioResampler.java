@@ -6,21 +6,19 @@ package com.clt.audio;
  */
 
 
-import java.io.ByteArrayOutputStream;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
 public class AudioResampler {
-    public static byte[] downsampletest(byte[] input, int inputRate, int outputRate) {
-        if (inputRate == outputRate) return input;
+    public static AudioInputStream downsample(AudioInputStream sourceStream, int outputRate) {
+        AudioFormat sourceFormat = sourceStream.getFormat();
+        AudioFormat targetFormat = new AudioFormat(outputRate, 16, sourceFormat.getChannels(), true, false);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int step = inputRate / outputRate;
-
-        // 16-bit samples so divide length by 2 and write both bytes of the sample into the new audio array
-        for (int i = 0; i < input.length/2; i += step) {
-            baos.write(input[2 * i]);
-            baos.write(input[2 * i + 1]);
+        if (!AudioSystem.isConversionSupported(targetFormat, sourceFormat)) {
+            throw new IllegalArgumentException("Downsampling from " + sourceFormat.getSampleRate() + " Hz to " + outputRate + " Hz is not supported.");
         }
 
-        return baos.toByteArray();
+        return AudioSystem.getAudioInputStream(targetFormat, sourceStream);
     }
 }

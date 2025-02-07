@@ -42,14 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
         source.connect(processorNode);
         processorNode.connect(audioContext.destination);
 
-        socket = new WebSocket("ws://localhost:8080/audio-stream");
+        socket = new WebSocket("ws://localhost:8080/audio-receive");
         socket.onopen = () => console.log("WebSocket connected.");
         socket.onerror = (event) => console.error("WebSocket error:", event);
         socket.onclose = () => console.log("WebSocket closed.");
     }
 
     function stopRecording() {
-        mediaStream.getTracks().forEach(track => track.stop());
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+        }
         audioContext.close();
         if (socket) socket.close();
     }

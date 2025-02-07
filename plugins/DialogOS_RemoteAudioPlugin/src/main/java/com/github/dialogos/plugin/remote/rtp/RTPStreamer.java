@@ -1,5 +1,6 @@
 package com.github.dialogos.plugin.remote.rtp;
 
+import com.clt.audio.AudioResampler;
 import org.ice4j.socket.MultiplexingDatagramSocket;
 
 import javax.sound.sampled.AudioFormat;
@@ -11,9 +12,8 @@ import java.util.Random;
 
 /*
  * TODO
- *  -add WebRTC handling
- *  -(if not fixed with the web feature) fix problem with streaming, where no real audio can be heard
- *        (i think its because of the Payload type)
+ *  - Experiment with audio buffer size for smoothness in streaming
+ *
  * */
 public class RTPStreamer extends Thread{
     private static final Random random = new Random();
@@ -50,18 +50,19 @@ public class RTPStreamer extends Thread{
         if (audioInputStream == null) {
             throw new IllegalStateException("No audio stream available");
         }
-
-        AudioFormat format = audioInputStream.getFormat();
+        // First downsample audio to 16khz before calculating the framesize, etc.
+        AudioInputStream downsampledAudioStream = AudioResampler.downsample(audioInputStream, 16000);
+        AudioFormat format = downsampledAudioStream.getFormat();
         int frameSize = format.getFrameSize();
         int frameRate = (int) format.getFrameRate();
         int bytesPerSecond = frameRate * frameSize;
 
-        byte[] audioBuffer = new byte[576]; // Adjust for MTU if needed (e.g., 1200 bytes max)
+        byte[] audioBuffer = new byte[1024]; // size here is usually based on the network
         byte[] rtpHeader = new byte[12]; // Standard RTP header size
 
         while (isRunning) {
             // End stream if no data is available
-            int bytesRead = audioInputStream.read(audioBuffer);
+            int bytesRead = downsampledAudioStream.read(audioBuffer);
             if (bytesRead == -1) break;
 
             constructRTPHeader(rtpHeader);

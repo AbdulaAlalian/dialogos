@@ -5,7 +5,7 @@ import java.net.DatagramSocket;
 
 /*
  * TODO
-    - Add Conversion of Sample Rate
+    - Catch BindException and print "Already used ignore binding", we don´t need to rebind when chaning the language
  *
  */
 

@@ -66,7 +66,8 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
     public void initialize() {
         try {
             //rtpStreamer = new RTPStreamer("127.0.0.1", 5004);
-            rtpStreamer = new RTPStreamer("127.0.0.1", 5004);
+            // Different port for streaming
+            rtpStreamer = new RTPStreamer("127.0.0.1", 5006);
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

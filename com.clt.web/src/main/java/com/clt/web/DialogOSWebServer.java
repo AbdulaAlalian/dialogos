@@ -44,14 +44,23 @@ public class DialogOSWebServer {
         ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.setContextPath("/");
 
-        // Register WebSocketRTPBridge under "/audio-stream"
-        ServletHolder websocketServletHolder = new ServletHolder(new WebSocketServlet() {
+        // Register receiving Audio (WebSocketRTPBridge) under "/audio-receive"
+        ServletHolder websocketToRtpServletHolder = new ServletHolder(new WebSocketServlet() {
             @Override
             public void configure(WebSocketServletFactory factory) {
                 factory.register(WebSocketToRTPBridge.class);
             }
         });
-        contextHandler.addServlet(websocketServletHolder, "/audio-stream");
+        contextHandler.addServlet(websocketToRtpServletHolder, "/audio-receive");
+
+        // Register sending Audio (RTPToWebSocketBridge) under /audio-stream
+        ServletHolder rtpToWebsocketServletHolder = new ServletHolder(new WebSocketServlet() {
+            @Override
+            public void configure(WebSocketServletFactory factory) {
+                factory.register(RTPToWebSocketBridge.class);
+            }
+        });
+        contextHandler.addServlet(rtpToWebsocketServletHolder, "/audio-stream");
         return contextHandler;
     }
 }
