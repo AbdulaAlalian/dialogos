@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Recorder</title>
+    <title>Dialogos Frontend</title>
 </head>
 <body>
-    <button id="startRecording">Start Recording</button>
-    <button id="stopRecording" disabled>Stop Recording</button>
+    <h1>Dialogos Frontend</h1>
+    <button id="startRecording">Starte Aufnahme</button>
+    <button id="stopRecording" disabled>Stoppe Aufnahme</button>
+    <br>
+    <br>
+    <br>
+    <span>Empfangene Audio:</span>
+    <meter id="volume-meter" min="0" max="100" value="0"></meter>
     <script src="audioRecorder.js"></script>
     <script src="audioPlayer.js"></script>
 </body>
