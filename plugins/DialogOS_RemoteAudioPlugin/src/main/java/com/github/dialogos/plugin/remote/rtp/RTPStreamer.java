@@ -10,11 +10,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Random;
 
-/*
- * TODO
- *  - Experiment with audio buffer size for smoothness in streaming
- *
- * */
 public class RTPStreamer extends Thread{
     private static final Random random = new Random();
 

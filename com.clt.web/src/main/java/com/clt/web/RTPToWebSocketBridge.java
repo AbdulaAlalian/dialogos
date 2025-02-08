@@ -18,7 +18,7 @@ public class RTPToWebSocketBridge {
     private static final CopyOnWriteArraySet<Session> sessions = new CopyOnWriteArraySet<>();
     private ByteArrayOutputStream audioBuffer;
 
-    private static final int CHUNK_SIZE = 800;
+    private static final int CHUNK_SIZE = 12800;
 
     public RTPToWebSocketBridge() {
         startListening();
@@ -65,10 +65,6 @@ public class RTPToWebSocketBridge {
             if (audioBuffer.size() > 0) {
                 sendBufferedAudio();
             }
-
-            // Send audio data after buffering everything
-            byte[] wavData = PCMToWavConverter.convertPcmToWav(audioBuffer.toByteArray(), 48000, 1, 16);
-            broadcastAudio(wavData);
         } catch (BindException e) {
             System.out.println("Port " + RTP_PORT + " is already in use. Ignoring the bind attempt.");
         } catch (Exception e) {

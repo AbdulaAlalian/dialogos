@@ -1,13 +1,8 @@
 package com.github.dialogos.plugin.remote.rtp;
 
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-
-/*
- * TODO
-    - Catch BindException and print "Already used ignore binding", we don´t need to rebind when chaning the language
- *
- */
 
 public class RTPReceiver {
 
@@ -51,7 +46,10 @@ public class RTPReceiver {
 
                 rtpInputStream.addAudioData(decodedAudio);
             }
-        } catch (Exception e) {
+        } catch (BindException e) {
+            System.out.println("Port " + port + " is already in use. Ignoring the bind attempt.");
+        }
+        catch (Exception e) {
             System.err.println("Error in listenForPackets: " + e.getMessage());
             e.printStackTrace();
         }

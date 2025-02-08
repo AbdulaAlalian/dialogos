@@ -24,7 +24,7 @@ public class WebSocketToRTPBridge {
 
     @OnWebSocketMessage
     public void onMessage(Session session, byte[] message, int offset, int len) {
-        try (DatagramSocket socket = new DatagramSocket()) {
+        try {
             // Send to RTP Receiver via UDP
             sendToRTPReceiver(message, offset);
         } catch (Exception e) {

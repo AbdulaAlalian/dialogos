@@ -430,7 +430,6 @@ public class Microphone extends BaseDataProcessor {
      * @return true if the recording started successfully; false otherwise
      */
 
-    // TODO: Stelle wo Audio eingelesen wird auslagern in das LocalInputPlugin
     public synchronized boolean startRecording() {
         if (recording) {
             return false;

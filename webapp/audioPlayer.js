@@ -1,4 +1,3 @@
-//TODO Fix problem when reloading the page, where audio context does not play audio until the tab is reopened
 document.addEventListener("DOMContentLoaded", function () {
     const ws = new WebSocket("ws://localhost:8080/audio-stream");
 
