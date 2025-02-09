@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         source.connect(processorNode);
         processorNode.connect(audioContext.destination);
 
+        // TODO change ip address
         socket = new WebSocket("ws://localhost:8080/audio-receive");
         socket.onopen = () => console.log("WebSocket connected.");
         socket.onerror = (event) => console.error("WebSocket error:", event);

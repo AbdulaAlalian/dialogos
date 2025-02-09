@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // TODO change ip address
     const ws = new WebSocket("ws://localhost:8080/audio-stream");
 
     ws.binaryType = "arraybuffer";
