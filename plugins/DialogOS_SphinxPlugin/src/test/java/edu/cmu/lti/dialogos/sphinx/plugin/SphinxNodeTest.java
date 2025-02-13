@@ -1,5 +1,6 @@
 package edu.cmu.lti.dialogos.sphinx.plugin;
 
+import com.clt.dialogos.plugin.PluginManager;
 import com.clt.dialogos.plugin.PluginSettings;
 import com.clt.diamant.Device;
 import com.clt.diamant.Grammar;
@@ -37,7 +38,7 @@ public class SphinxNodeTest {
     }
 
     /** test recognition node's recognition capability (not yet the pattern matching) */
-    @Ignore // until there's some common audio handling, one needs to speak a digit during testing for this to work. Hence disabling.
+    // until there's some common audio handling, one needs to speak a digit during testing for this to work. Hence disabling.
     @Test(timeout = 10000) public void recognize() {
         SphinxNode node = createNode();
         node.setProperty("grammar", new Grammar("zahl", "language \"English\";\n" +
@@ -94,10 +95,24 @@ public class SphinxNodeTest {
 
         Plugin sphinxPlugin = new Plugin();
         PluginSettings sphinxSettings = sphinxPlugin.createDefaultSettings();
+        // needed for audiohandling
+        PluginManager pluginManager = new PluginManager();
+
+        public TrivialGraphOwner() {
+            // First initialize LocalAudioInputPlugin
+            pluginManager.getAudioInputPluginsProp().getPossibleValues()[0].initialize();
+            // Then use it testing
+            pluginManager.setActiveAudioInputPlugin(pluginManager.getAudioInputPluginsProp().getPossibleValues()[0]);
+        }
 
         @Override
         public PluginSettings getPluginSettings(Class<? extends com.clt.dialogos.plugin.Plugin> pluginClass) {
             return sphinxSettings;
+        }
+
+        @Override
+        public PluginManager getPluginManager() {
+            return pluginManager;
         }
 
         @Override

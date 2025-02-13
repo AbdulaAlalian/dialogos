@@ -4,6 +4,7 @@ dependencies {
   implementation project(':com.clt.xml')
   implementation project(':com.clt.script')
   implementation project(':Diamant')
+  implementation project(':plugins:DialogOS_LocalAudioPlugin')
 
   implementation group: 'commons-codec', name: 'commons-codec', version: '1.10'
   implementation group: 'commons-io', name: 'commons-io', version: '2.5'

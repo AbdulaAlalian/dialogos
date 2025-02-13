@@ -52,6 +52,14 @@ public class PluginManager {
 
     }
 
+    public DefaultEnumProperty<AudioPlugin> getAudioInputPluginsProp() {
+        return audioInputPluginsProp;
+    }
+
+    public DefaultEnumProperty<AudioPlugin> getAudioOutputPluginsProp() {
+        return audioOutputPluginsProp;
+    }
+
     public JComponent createEditor() {
         JPanel p = new JPanel(new GridBagLayout());
 
