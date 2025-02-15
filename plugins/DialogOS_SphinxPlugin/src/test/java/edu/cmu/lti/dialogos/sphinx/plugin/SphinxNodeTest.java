@@ -63,7 +63,7 @@ public class SphinxNodeTest {
         }
     }
 
-    @Ignore // until there's some common audio handling, one needs to speak a digit during testing for this to work. Hence disabling.
+     // until there's some common audio handling, one needs to speak a digit during testing for this to work. Hence disabling.
     @Test(timeout = 10000) public void recognizeAndMatch() {
         SphinxNode node = createNode();
         node.setProperty("grammar", new Grammar("zahl", "language \"English\";\n" +
@@ -99,9 +99,8 @@ public class SphinxNodeTest {
         PluginManager pluginManager = new PluginManager();
 
         public TrivialGraphOwner() {
-            // First initialize LocalAudioInputPlugin
+            // initialize LocalAudioInputPlugin & use it for testing
             pluginManager.getAudioInputPluginsProp().getPossibleValues()[0].initialize();
-            // Then use it testing
             pluginManager.setActiveAudioInputPlugin(pluginManager.getAudioInputPluginsProp().getPossibleValues()[0]);
         }
 
