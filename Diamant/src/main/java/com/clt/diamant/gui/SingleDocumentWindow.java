@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,11 +26,9 @@ import javax.swing.event.ChangeListener;
 import com.clt.dialog.client.ConnectDialog;
 import com.clt.dialogos.plugin.Plugin;
 import com.clt.dialogos.plugin.PluginLoader;
-import com.clt.dialogos.plugin.PluginManager;
 import com.clt.diamant.Device;
 import com.clt.diamant.Executer;
 import com.clt.diamant.ExecutionResult;
-import com.clt.diamant.IdMap;
 import com.clt.diamant.MenuUtils;
 import com.clt.diamant.Preferences;
 import com.clt.diamant.Resources;
@@ -49,7 +46,6 @@ import com.clt.diamant.graph.ui.GraphUI;
 import com.clt.diamant.graph.ui.ProcTree;
 import com.clt.event.ProgressListener;
 import com.clt.gui.Commands;
-import com.clt.gui.FileChooser;
 import com.clt.gui.GUI;
 import com.clt.gui.Images;
 import com.clt.gui.ListEditor;
@@ -72,7 +68,8 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
 
     public static final int cmdEditDevices = Commands.cmdDocument + 2;
     public static final int cmdResetDevices = Commands.cmdDocument + 3;
-    public static final int cmdValidate = Commands.cmdDocument + 4;
+    public static final int cmdOpenPluginManager = Commands.cmdDocument + 4;
+    public static final int cmdValidate = Commands.cmdDocument + 5;
     public static final int cmdZoomIn = Commands.cmdDocument + 6;
     public static final int cmdZoomOut = Commands.cmdDocument + 7;
     public static final int cmdSetup = Commands.cmdDocument + 10;
@@ -440,6 +437,9 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
         m.addItem(Resources.getString("Devices") + "...",
                   SingleDocumentWindow.cmdEditDevices, KeyEvent.VK_D);
 
+        m.addItem(Resources.getString("PluginManager") + "...",
+                  SingleDocumentWindow.cmdOpenPluginManager);
+
         for (final Plugin plugin : PluginLoader.getPlugins()) {
             m.add(new CmdMenuItem(plugin.getName(), 1, null, new MenuCommander() {
 
@@ -580,6 +580,7 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
             case cmdSetup:
             case cmdEditDevices:
             case cmdResetDevices:
+            case cmdOpenPluginManager:
             case cmdRun:
             case cmdRunConfiguration:
             case cmdRunWithLog:
@@ -640,6 +641,10 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
 
                 case cmdEditDevices:
                     this.showSetupDialog("Devices");
+                    break;
+
+                case cmdOpenPluginManager:
+                    this.showSetupDialog("PluginManager");
                     break;
 
                 case cmdPrint:
