@@ -117,6 +117,8 @@ public class RTPToWebSocketBridge {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         System.out.println("WebSocket Connected: " + session.getRemoteAddress());
+        // timeout after not receiving data for 10 minutes (should be enough)
+        session.setIdleTimeout(600000);
         sessions.add(session);
     }
 
