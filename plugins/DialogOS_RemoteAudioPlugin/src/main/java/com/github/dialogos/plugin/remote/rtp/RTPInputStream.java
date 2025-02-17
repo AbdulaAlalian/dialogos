@@ -15,6 +15,7 @@ public class RTPInputStream extends InputStream {
      * Starts recording, allowing audio data to be added and consumed.
      */
     public void startRecording() {
+        System.out.println("Started Recording");
         recording = true;
     }
 

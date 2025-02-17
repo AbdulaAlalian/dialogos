@@ -10,7 +10,6 @@ import com.clt.diamant.graph.GraphOwner;
 import com.clt.diamant.graph.nodes.NodeExecutionException;
 import com.clt.script.Environment;
 import com.clt.speech.recognition.LanguageName;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
@@ -99,9 +98,10 @@ public class SphinxNodeTest {
         PluginManager pluginManager = new PluginManager();
 
         public TrivialGraphOwner() {
-            // initialize LocalAudioInputPlugin & use it for testing
-            pluginManager.getAudioInputPluginsProp().getPossibleValues()[0].initialize();
-            pluginManager.setActiveAudioInputPlugin(pluginManager.getAudioInputPluginsProp().getPossibleValues()[0]);
+            // set FileAudioInputPlugin as active AudioPlugin & use it for testing
+            pluginManager.setActiveAudioInputPlugin(pluginManager.getAudioInputPluginsProp().getPossibleValues()[1]);
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("edu/cmu/lti/dialogos/sphinx/client/one.wav");
+            pluginManager.getActiveAudioInputPlugin().setInputStream(inputStream);
         }
 
         @Override

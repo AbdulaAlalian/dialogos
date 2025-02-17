@@ -45,6 +45,8 @@ public interface AudioPlugin extends Plugin {
         return null;
     }
 
+    default void setInputStream(InputStream inputStream) {}
+
     /**
      * Plays the audio from the specified audio inputstream (e.g. synthesised audio from maryTTS) to an audio output device.
      * This method is implemented by an Audiooutput plugin and the default implementation of playAudio does nothing.

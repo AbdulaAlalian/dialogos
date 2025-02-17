@@ -15,5 +15,7 @@ include 'plugins:DialogOS_MaryTTSPlugin'
 include 'plugins:DialogOS_SphinxPlugin'
 include 'plugins:DialogOS_LocalAudioPlugin'
 include 'plugins:DialogOS_RemoteAudioPlugin'
-
+include 'plugins:DialogOS_FileAudioPlugin'
 rootProject.name = "dialogos"
+
+

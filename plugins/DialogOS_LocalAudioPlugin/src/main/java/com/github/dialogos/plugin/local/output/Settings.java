@@ -22,8 +22,7 @@ public class Settings extends PluginSettings {
 
     @Override
     public JComponent createEditor() {
-        JPanel p = new JPanel(new GridBagLayout());
-        return p;
+        return null;
     }
 
     @Override

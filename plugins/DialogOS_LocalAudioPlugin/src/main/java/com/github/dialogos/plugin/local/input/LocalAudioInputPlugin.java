@@ -21,7 +21,6 @@ public class LocalAudioInputPlugin implements AudioPlugin {
         return "dialogos.plugin.localAudioInput";
     }
 
-    // TODO ggf in nen resource ordner umlagern wie bei den anderen
     @Override
     public String getName() {
         return "Lokale Audioeingabe";

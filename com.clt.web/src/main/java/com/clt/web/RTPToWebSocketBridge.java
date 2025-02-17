@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-// TODO Clean up code
 @WebSocket
 public class RTPToWebSocketBridge {
 

@@ -1,4 +1,4 @@
-package com.github.dialogos.plugin.remote.input;
+package com.github.dialogos.plugin.file.input;
 
 import com.clt.dialogos.plugin.PluginRuntime;
 import com.clt.dialogos.plugin.PluginSettings;

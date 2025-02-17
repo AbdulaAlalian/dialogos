@@ -441,26 +441,30 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
                   SingleDocumentWindow.cmdOpenPluginManager);
 
         for (final Plugin plugin : PluginLoader.getPlugins()) {
-            m.add(new CmdMenuItem(plugin.getName(), 1, null, new MenuCommander() {
+            // Only add a new menu point if the plugin has a menu
+            if (this.getDocument().getPluginSettings(plugin.getClass()).createEditor() != null) {
+                m.add(new CmdMenuItem(plugin.getName(), 1, null, new MenuCommander() {
 
-                              public String menuItemName(int cmd, String oldName) {
-                                  return plugin.getName() + "...";
-                              }
+                    public String menuItemName(int cmd, String oldName) {
+                        return plugin.getName() + "...";
+                    }
 
-                              public boolean menuItemState(int cmd) {
-                                  if (SingleDocumentWindow.this.runtime != null) {
-                                      return false;
-                                  } else {
-                                      return true;
-                                  }
-                              }
+                    public boolean menuItemState(int cmd) {
+                        if (SingleDocumentWindow.this.runtime != null) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
 
-                              public boolean doCommand(int cmd) {
-                                  SingleDocumentWindow.this.showSetupDialog(plugin.getName());
-                                  return true;
-                              }
-                          }));
-        }
+                    public boolean doCommand(int cmd) {
+                        SingleDocumentWindow.this.showSetupDialog(plugin.getName());
+                        return true;
+                    }
+                }));
+            }
+            }
+
 
         m = mbar.addMenu(Resources.getString("GraphMenu"));
         m.addItem(Resources.getString("Variables") + "...", GraphUI.cmdEditVariables);
@@ -940,22 +944,26 @@ public class SingleDocumentWindow<DocType extends SingleDocument>
                            return true;
                        }
                    }, true));
-        // TODO: Icon ändern
+        // TODO: Change icon
         jtp.addTab(Resources.getString("PluginManager"), rescaleToMaxSize(Images.load("Devices.png"), 48, 48),
                 doc.getPluginManager().createEditor());
 
         for (Plugin plugin : PluginLoader.getPlugins()) {
-            JPanel p = new JPanel(new BorderLayout(6, 6));
-            // p.setBorder(new EmptyBorder(8,8,8,8));
-            p.add(new JLabel(plugin.getName() + ", " + Resources.getString("Version")
-                    + " "
-                    + plugin.getVersion()), BorderLayout.NORTH);
-            p.add(this.getDocument().getPluginSettings(plugin.getClass()).createEditor(),
-                  BorderLayout.CENTER);
-            // deal with overly large icons (at least for ImageIcons)
-            Icon pluginIcon = plugin.getIcon();
-            pluginIcon = rescaleToMaxSize(pluginIcon, 48, 48);
-            jtp.addTab(plugin.getName(), pluginIcon, p);
+            // Only add new tab if the createEditor command is not null (don´t add unnecessary plugin menus)
+            if (this.getDocument().getPluginSettings(plugin.getClass()).createEditor() != null) {
+                JPanel p = new JPanel(new BorderLayout(6, 6));
+                // p.setBorder(new EmptyBorder(8,8,8,8));
+                p.add(new JLabel(plugin.getName() + ", " + Resources.getString("Version")
+                        + " "
+                        + plugin.getVersion()), BorderLayout.NORTH);
+
+                p.add(this.getDocument().getPluginSettings(plugin.getClass()).createEditor(),
+                        BorderLayout.CENTER);
+                // deal with overly large icons (at least for ImageIcons)
+                Icon pluginIcon = plugin.getIcon();
+                pluginIcon = rescaleToMaxSize(pluginIcon, 48, 48);
+                jtp.addTab(plugin.getName(), pluginIcon, p);
+            }
         }
 
         jtp.setTabPlacement(SwingConstants.LEFT);

@@ -6,10 +6,6 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import java.io.IOException;
 import java.net.*;
 
-/*
-   TODO
-    - disable timeout error message in console (does not affect the software)
- */
 
 @WebSocket
 public class WebSocketToRTPBridge {

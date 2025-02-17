@@ -18,11 +18,9 @@ public class Settings extends PluginSettings {
     protected void readAttribute(com.clt.xml.XMLReader r, String name, String value, IdMap uid_map) throws SAXException {
     }
 
-    // TODO remove menu
     @Override
     public JComponent createEditor() {
-        JPanel p = new JPanel(new GridBagLayout());
-        return p;
+        return null;
     }
 
     @Override
