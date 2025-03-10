@@ -13,6 +13,8 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
     private RTPInputStream rtpInputStream;
     private RTPReceiver rtpReceiver;
 
+    private Settings pluginSettings;
+
     @Override
     public boolean isAudioInputPlugin() {
         return true;
@@ -51,7 +53,8 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
 
     @Override
     public PluginSettings createDefaultSettings() {
-        return new Settings();
+        pluginSettings = new Settings();
+        return pluginSettings;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
 
     @Override
     public InputStream setupAndGetAudioInput() throws IOException {
-        rtpReceiver.startListening(5004);
+        rtpReceiver.startListening(pluginSettings.getRtpPort());
         return rtpInputStream;
     }
 

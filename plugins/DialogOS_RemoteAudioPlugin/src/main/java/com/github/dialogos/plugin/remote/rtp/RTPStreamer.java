@@ -18,7 +18,7 @@ public class RTPStreamer extends Thread{
     private MultiplexingDatagramSocket socket;
     private int sequenceNumber;
     private long timestamp;
-    private int payloadType = RTPPayloadConstants.DYNAMIC_MIN;
+    private int payloadType = RTPConstants.DYNAMIC_MIN;
     private int ssrc = random.nextInt(); // SSRC should be unique for the session
 
     private AudioInputStream audioInputStream;

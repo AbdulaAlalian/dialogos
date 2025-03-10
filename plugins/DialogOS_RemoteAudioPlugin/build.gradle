@@ -2,6 +2,7 @@ dependencies {
     implementation project(':Diamant')
     implementation project(':com.clt.xml')
     implementation project(':com.clt.audio')
+    implementation project(':com.clt.base')
 
     implementation(group:'com.github.cmusphinx', name:'sphinx4', version:'44a5c08') {
         exclude module: 'sphinx4-data'
