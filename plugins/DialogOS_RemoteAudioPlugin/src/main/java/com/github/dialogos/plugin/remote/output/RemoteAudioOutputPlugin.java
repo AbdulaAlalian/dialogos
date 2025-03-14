@@ -2,6 +2,7 @@ package com.github.dialogos.plugin.remote.output;
 
 import com.clt.dialogos.plugin.AudioPlugin;
 import com.clt.dialogos.plugin.PluginSettings;
+import com.github.dialogos.plugin.remote.rtp.RTPConstants;
 import com.github.dialogos.plugin.remote.rtp.RTPStreamer;
 
 import javax.sound.sampled.AudioInputStream;
@@ -10,6 +11,8 @@ import javax.swing.*;
 
 public class RemoteAudioOutputPlugin implements AudioPlugin {
     RTPStreamer rtpStreamer;
+
+    private Settings pluginSettings;
 
     @Override
     public boolean isAudioInputPlugin() {
@@ -65,9 +68,11 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
     @Override
     public void initialize() {
         try {
-            //rtpStreamer = new RTPStreamer("127.0.0.1", 5004);
-            // Different port for streaming
-            rtpStreamer = new RTPStreamer("127.0.0.1", 5006);
+            if (pluginSettings == null) {
+                rtpStreamer = new RTPStreamer("127.0.0.1", RTPConstants.RTP_STANDARD_PORT);
+            } else {
+                rtpStreamer = new RTPStreamer(pluginSettings.getIpAddr(), pluginSettings.getRtpPort());
+            }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
@@ -75,6 +80,7 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
 
     @Override
     public PluginSettings createDefaultSettings() {
-        return new Settings();
+        pluginSettings = new Settings();
+        return pluginSettings;
     }
 }

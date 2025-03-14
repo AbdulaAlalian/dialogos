@@ -16,8 +16,7 @@ public class Settings extends PluginSettings {
     DefaultIntegerProperty rtpPortProp;
 
     public Settings() {
-        rtpPortProp = new DefaultIntegerProperty("RTP-Port" , "RTP-Port", null);
-        rtpPortProp.setValue(RTPConstants.RTP_STANDARD_PORT);
+        rtpPortProp = new DefaultIntegerProperty("RTP-Port" , "RTP-Port", null, RTPConstants.RTP_STANDARD_PORT);
     }
 
     @Override

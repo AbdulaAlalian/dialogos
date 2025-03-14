@@ -116,17 +116,6 @@ public class RTPStreamer extends Thread{
         header[11] = (byte) ssrc;
     }
 
-    // Method to generate and send SDP description to the receiver
-    private void sendSDP(String ipAddress, int rtpPort) throws IOException {
-        String sdpMessage = SDPGenerator.generateSynthesizerSDPDescription(ipAddress, rtpPort);
-
-        // Send SDP message to the receiver (port used is for session initiation protocol)
-        DatagramPacket sdpPacket = new DatagramPacket(sdpMessage.getBytes(), sdpMessage.length(),
-                InetAddress.getByName(ipAddress), rtpPort);
-        socket.send(sdpPacket);
-        System.out.println("Sent SDP message to: " + ipAddress + ":5060");
-    }
-
     public void setAudio(AudioInputStream audioInputStream) {
         this.audioInputStream = audioInputStream;
     }
