@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
+/**
+ * Class that manages the Active audio input plugins and output plugins.
+ */
 public class PluginManager {
 
     private static Collection<AudioPlugin> audioPlugins = PluginLoader.getAudioPlugins();

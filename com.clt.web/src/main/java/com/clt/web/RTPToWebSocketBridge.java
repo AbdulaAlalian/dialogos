@@ -9,10 +9,15 @@ import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * This is class is a websocket implementation and represents the communication from DialogOS to the browser. It listens for RTP packets and
+ * converts them into WAV-data to send them to the browser
+ */
 @WebSocket
 public class RTPToWebSocketBridge {
 
     private boolean isListening = false;
+    // Standard Port of RTPStreamer
     private static final int RTP_PORT = 5006;
     private static final CopyOnWriteArraySet<Session> sessions = new CopyOnWriteArraySet<>();
     private ByteArrayOutputStream audioBuffer;
@@ -32,6 +37,9 @@ public class RTPToWebSocketBridge {
         isListening = false;
     }
 
+    /**
+     * Listens for RTP-Packages coming from the RemoteAudioPlugins RTPStreamer
+     */
     private void listenForPackets() {
         DatagramSocket socket = null;
         try {

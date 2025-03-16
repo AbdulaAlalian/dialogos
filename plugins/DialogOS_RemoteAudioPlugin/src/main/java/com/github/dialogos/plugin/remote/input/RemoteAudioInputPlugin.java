@@ -9,6 +9,10 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Plugin that represents the audio input from remote applications or a browser. In this case the audio input device is (usually) not connected
+ * to the local device which runs DialogOS
+ */
 public class RemoteAudioInputPlugin implements AudioPlugin {
     private RTPInputStream rtpInputStream;
     private RTPReceiver rtpReceiver;
@@ -48,7 +52,7 @@ public class RemoteAudioInputPlugin implements AudioPlugin {
     @Override
     public void initialize() {
         this.rtpInputStream = new RTPInputStream();
-        this.rtpReceiver = new RTPReceiver( rtpInputStream);
+        this.rtpReceiver = new RTPReceiver(rtpInputStream);
     }
 
     @Override

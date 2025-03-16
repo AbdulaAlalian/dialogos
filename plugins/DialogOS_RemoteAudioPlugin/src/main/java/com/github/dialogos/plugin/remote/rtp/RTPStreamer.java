@@ -10,6 +10,10 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Random;
 
+/**
+ * Class for streaming audio data via RTP to an application or browser. It wraps the audio data into an RTP-package
+ * and sends it via UDP to the remote host
+ */
 public class RTPStreamer extends Thread{
     private static final Random random = new Random();
 
@@ -34,7 +38,6 @@ public class RTPStreamer extends Thread{
     public void run() {
         try {
             isRunning = true;
-            // sendSDP(remoteAddress.getHostAddress(), remotePort);
             streamAudio();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -52,7 +55,7 @@ public class RTPStreamer extends Thread{
         int frameRate = (int) format.getFrameRate();
         int bytesPerSecond = frameRate * frameSize;
 
-        byte[] audioBuffer = new byte[1024]; // size here is usually based on the network
+        byte[] audioBuffer = new byte[1024]; // size here is usually based on the network, but 1024 should be fine
         byte[] rtpHeader = new byte[12]; // Standard RTP header size
 
         while (isRunning) {
@@ -97,6 +100,10 @@ public class RTPStreamer extends Thread{
         interrupt();
     }
 
+    /**
+     * Constructs an RTP-header and saves it into given byte array
+     * @param header the byte array where the rtp-header should be saved
+     */
     private void constructRTPHeader(byte[] header) {
         // RTP Header Construction:
         header[0] = (byte) 0x80; // Version 2, no padding, no extension

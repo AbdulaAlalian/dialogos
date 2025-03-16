@@ -18,7 +18,7 @@ public class Settings extends PluginSettings {
     DefaultStringProperty ipAddrProp;
 
     public Settings() {
-        rtpPortProp = new DefaultIntegerProperty("RTP-Port", "RTP-Port", null, RTPConstants.RTP_STANDARD_PORT);
+        rtpPortProp = new DefaultIntegerProperty("RTP-Port", "RTP-Port", null, RTPConstants.RTP_STANDARD_OUTPUT_PORT);
         ipAddrProp = new DefaultStringProperty("IP-Address", "IP-Address", null, "127.0.0.1");
     }
 

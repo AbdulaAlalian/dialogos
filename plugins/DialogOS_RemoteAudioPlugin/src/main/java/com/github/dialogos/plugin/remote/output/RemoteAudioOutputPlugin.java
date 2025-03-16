@@ -8,7 +8,10 @@ import com.github.dialogos.plugin.remote.rtp.RTPStreamer;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 
-
+/**
+ * Plugin that represents the audio output to remote applications or a browser. In this case the audio output device is (usually) not connected
+ * to the local device which runs DialogOS
+ */
 public class RemoteAudioOutputPlugin implements AudioPlugin {
     RTPStreamer rtpStreamer;
 
@@ -69,7 +72,7 @@ public class RemoteAudioOutputPlugin implements AudioPlugin {
     public void initialize() {
         try {
             if (pluginSettings == null) {
-                rtpStreamer = new RTPStreamer("127.0.0.1", RTPConstants.RTP_STANDARD_PORT);
+                rtpStreamer = new RTPStreamer("127.0.0.1", RTPConstants.RTP_STANDARD_OUTPUT_PORT);
             } else {
                 rtpStreamer = new RTPStreamer(pluginSettings.getIpAddr(), pluginSettings.getRtpPort());
             }

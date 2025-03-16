@@ -8,6 +8,10 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
+/**
+ * A jetty-based webserver for DialogOS. It´s used for the communication to DialogOS via a browser and manages the web resources needed for the communication. It also
+ * initializes websocket endpoints for communication.
+ */
 public class DialogOSWebServer {
 
     public static void startWebServer() {

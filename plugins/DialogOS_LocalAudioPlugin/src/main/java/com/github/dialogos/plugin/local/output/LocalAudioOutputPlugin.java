@@ -7,6 +7,11 @@ import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import marytts.util.data.audio.AudioPlayer;
 
+/**
+ * Plugin that represents the audio output to locally connected devices such as headphones
+ */
+
+
 public class LocalAudioOutputPlugin implements AudioPlugin {
 
     AudioPlayer audioPlayer;

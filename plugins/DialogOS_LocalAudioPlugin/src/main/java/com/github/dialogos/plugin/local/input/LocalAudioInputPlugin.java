@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Plugin that represents the audio input from locally connected devices such as a microphone
+ */
 public class LocalAudioInputPlugin implements AudioPlugin {
     private MicrophoneInputStream microphone;
 

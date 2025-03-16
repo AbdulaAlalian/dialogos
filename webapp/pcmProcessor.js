@@ -28,7 +28,11 @@ class PCMProcessor extends AudioWorkletProcessor {
         return true;
     }
 
-    // Convert float to 16-bit signed PCM for sphinx
+    /**
+     * Convert float to 16-bit signed PCM
+     * @param floatSample data in float
+     * @returns {number} data in 16-bit signed PCM
+     */
     floatTo16BitPCM(floatSample) {
         const clampedSample = Math.max(-1, Math.min(1, floatSample));
         return clampedSample < 0 ? clampedSample * 0x8000 : clampedSample * 0x7FFF;

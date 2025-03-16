@@ -1,3 +1,6 @@
+// TODO deploy application, because MediaStream-API does not work for unsafe contexts (http). It needs to be https or else
+//      navigator.mediaDevices.getUserMedia is undefined
+
 document.addEventListener("DOMContentLoaded", function () {
     const startButton = document.getElementById("startRecording");
     const stopButton = document.getElementById("stopRecording");
@@ -21,6 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
         stopButton.disabled = true;
     });
 
+    /**
+     * Start recording the audio from the microphone and sends it via the websocket to DialogOS
+     * @returns {Promise<void>}
+     */
     async function startRecording() {
         // FIXME could be a problem if the recording device doesn´t have actually 48khz
         //  (it´s the most used one, but not all capturing devices have 48khz)
@@ -42,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
         source.connect(processorNode);
         processorNode.connect(audioContext.destination);
 
-        // TODO change ip address
+        // TODO change ip address (see first todo, deployment)
         socket = new WebSocket("ws://localhost:8080/audio-receive");
         socket.onopen = () => console.log("WebSocket connected.");
         socket.onerror = (event) => console.error("WebSocket error:", event);

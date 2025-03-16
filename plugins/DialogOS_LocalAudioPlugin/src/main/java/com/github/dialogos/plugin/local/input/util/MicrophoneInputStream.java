@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Used for the recording of audio via the microphone. Implementation is copied from the Microphone class in the sphinx package
+ */
 public class MicrophoneInputStream {
     private AudioFormat finalFormat;
     private AudioInputStream audioStream;

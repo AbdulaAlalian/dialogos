@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Class that wraps received audio from an RTP-session into an input stream, which for example can then be used in a speech recognizer
+ */
 public class RTPInputStream extends InputStream {
     private final BlockingQueue<byte[]> audioQueue = new LinkedBlockingQueue<>();
     private byte[] currentBuffer = null;

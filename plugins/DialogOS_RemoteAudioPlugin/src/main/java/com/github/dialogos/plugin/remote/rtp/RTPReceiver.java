@@ -4,6 +4,9 @@ import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+/**
+ * Class that receives RTP-packages and decodes the payload from them for further use
+ */
 public class RTPReceiver {
 
     private boolean isListening = false;

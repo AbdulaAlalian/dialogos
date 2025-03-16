@@ -4,6 +4,10 @@ import javax.sound.sampled.AudioInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The interface for DialogOS Audio-IO plugins. It extends the Plugin interface for additional methods related to audio output and input.
+ * Examples for an audio plugin are the output of audio onto headphones or input of audio from the microphone
+ */
 public interface AudioPlugin extends Plugin {
     boolean isAudioInputPlugin();
 

@@ -16,7 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let analyser;
     let dataArray;
 
-    // Plays the received audio data to the speakers
+    /**
+     * plays the received audio to the speakers
+     * @param audioData the audio to play
+     */
     function playAudio(audioData) {
         if (!audioContext) {
             audioContext = new AudioContext({sampleRate: 16000});
@@ -44,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // dynamically update the volume meter
+    /**
+     * Used to dynamically update the volume meter for the webpage
+     */
     function updateVolumeMeter() {
         if (!analyser) return;
 

@@ -12,6 +12,7 @@ public class RTPConstants {
     public static final int DYNAMIC_MIN = 96;
     public static final int DYNAMIC_MAX = 127;
 
-    // Standard Port
-    public static final int RTP_STANDARD_PORT = 5004;
+    // Standard Ports
+    public static final int RTP_STANDARD_INPUT_PORT = 5004;
+    public static final int RTP_STANDARD_OUTPUT_PORT = 5006;
 }
